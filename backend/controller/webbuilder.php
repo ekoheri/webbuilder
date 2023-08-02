@@ -18,6 +18,9 @@ class webbuilder {
         $jenis_element = $parameter;
         for($i = 0; $i < count($json_arr[$jenis_element]); $i++)
         {
+            $base_url_img = "http://" . $_SERVER['SERVER_NAME'] . ":" . $_SERVER['SERVER_PORT']."/elements/images/";
+            $json_arr[$jenis_element][$i]['image'] = $base_url_img.$json_arr[$jenis_element][$i]['image'];
+
             if($json_arr[$jenis_element][$i]['css'] != "none")
             {
                 $namafile = $json_arr[$jenis_element][$i]['css'];
