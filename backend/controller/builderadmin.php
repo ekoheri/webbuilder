@@ -45,14 +45,14 @@ class builderadmin {
                     fwrite($css_file, $script_js);
                     fclose($js_file);
                 }
-                echo "Sukses menyimpan data ".$id_element;
+                echo "<p>Sukses menyimpan data ".$id_element."</p>";
             } else {
-                echo "Ukuran file terlalu besar";
+                echo "<p>Ukuran file terlalu besar</p>";
             } 
         } else {
-            echo "Ekstensi bukan PNG atau JPG";
+            echo "<p>Ekstensi bukan PNG atau JPG</p>";
         }
- 
+        echo "<p><a href=\"index\">Kembali ke halaman entry</a></p>";
     }
 }
 ?>
