@@ -86,7 +86,7 @@
 
         var http = createRequestObject();
         function sendRequest(method, urls, jobs, data) {
-            var rootUrl = 'http://localhost:8080/index.php/webbuilder/';
+            var rootUrl = 'http://localhost:8080/index.php/api/';
             //var rootUrl = 'http://localhost/backend_webbuilder/index.php/';
             http.open(method, rootUrl+urls);
             http.setRequestHeader("Cache-Control", "no-cache");

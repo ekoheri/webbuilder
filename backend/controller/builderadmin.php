@@ -66,14 +66,30 @@ class builderadmin {
                     $db_file = file_get_contents($folder.'/db.json');
                     $db_arr = json_decode($db_file, true);
 
-                    $element_baru = array(
+                    $element_entry = array(
                         'id' => $id_element,
                         'image' => $id_element.".".$ekstensi,
                         'css' => $nama_file_css,
                         'js' => $nama_file_js,
                         'html' => $id_element.".html"
                     );
-                    array_push($db_arr[$jenis_element], $element_baru);
+
+                    $i = 0;
+                    $ketemu = false;
+                    while($i < count($db_arr[$jenis_element]) && $ketemu == false) {
+                        if($id_element == $db_arr[$jenis_element][0]['id']) {
+                            $ketemu = true;
+                        } else {
+                            $i++;
+                        }
+                    }
+                    if($ketemu == true) {
+                        //update db
+                        array_replace($db_arr[$jenis_element][$i], $element_entry);
+                    } else {
+                       //insert db
+                       array_push($db_arr[$jenis_element], $element_entry);     
+                    }
                     $db_str = json_encode($db_arr);
 
                     $db_file = fopen($folder."/db.json", "w") or die("Unable to open file HTML");
@@ -118,9 +134,6 @@ class builderadmin {
 
         $db_file = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/elements/db_user.json');
         $db_arr = json_decode($db_file, true);
-        echo "<pre>";
-        print_r($db_arr);
-        echo "</pre>";
         $i = 0;
         $ketemu = false;
         while($i < count($db_arr) && $ketemu == false) {
