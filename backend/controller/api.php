@@ -1,12 +1,11 @@
 <?php
-class webbuilder {
+class api {
     private $view;
     function __construct(){
         include "core/helper.php";
         $this->vew = new helper();
     }
     function index(){
-
         $data = array();
         $data['nama'] = 'Eko Heri';
         echo $this->vew->loadView('view/view_webbuilder.php', $data);

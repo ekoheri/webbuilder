@@ -7,12 +7,20 @@ class builderadmin {
     }
     function index()
     {
+        if(!isset($_SESSION['informasi_user'])) {
+            header("location: login");
+            exit;
+        }
         echo $this->vew->loadView('view/view_builderadmin_header.php', null);
         echo $this->vew->loadView('view/view_builderadmin_entry.php', null);
         echo $this->vew->loadView('view/view_builderadmin_footer.php', null);
     }
     function simpan()
     {
+        if(!isset($_SESSION['informasi_user'])) {
+            header("location: login");
+            exit;
+        }
         $jenis_element = isset($_POST['jenis_element']) ? $_POST['jenis_element'] : '';
         $id_element = isset($_POST['id_element']) ? $_POST['id_element'] : '';
         $script_html = isset($_POST['script_html']) ? $_POST['script_html'] : '';
@@ -80,6 +88,10 @@ class builderadmin {
         }   
     }
     function list(){
+        if(!isset($_SESSION['informasi_user'])) {
+            header("location: login");
+            exit;
+        }
         $db_file = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/elements/db.json');
         $db_arr = json_decode($db_file, true);
 
@@ -87,6 +99,28 @@ class builderadmin {
         echo $this->vew->loadView('view/view_builderadmin_header.php', null);
         echo $this->vew->loadView('view/view_builderadmin_list.php', $data);
         echo $this->vew->loadView('view/view_builderadmin_footer.php', null);
+    }
+    function login()
+    {
+        echo $this->vew->loadView('view/view_builderadmin_login.php', null);
+    }
+    function submitlogin()
+    {
+        $username = isset($_POST['username']) ? $_POST['username'] :'';
+        $passwd = isset($_POST['passwd']) ? $_POST['passwd'] :'';
+
+        if($username == 'ekoheri@gmail.com' && $passwd == 'admin') {
+            $_SESSION['informasi_user'] = $username;
+            header("location: index");
+        } else {
+            header("location: login");
+        }
+    }
+    function logout()
+    {
+        session_unset();
+        session_destroy();
+        header("location: login");
     }
 }
 ?>

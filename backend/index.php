@@ -1,9 +1,10 @@
 <?php
+session_start();
 $mymvc = new index;
 $mymvc->run();
 
 class index {
-    private $controller = 'webbuilder';
+    private $controller = 'builderadmin';
     private $method = 'index';
     private $parameter = array();
 
