@@ -6,9 +6,11 @@ class api {
         $this->vew = new helper();
     }
     function index(){
-        $data = array();
-        $data['nama'] = 'Eko Heri';
-        echo $this->vew->loadView('view/view_webbuilder.php', $data);
+        $db_file = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/elements/db.json');
+        $db_arr = json_decode($db_file, true);
+
+        $data_list["list_element"] = $db_arr;
+        echo $this->vew->loadView('view/view_webbuilder.php', $data_list);
     }
     function elements($parameter)
     {
@@ -23,13 +25,13 @@ class api {
             if($json_arr[$jenis_element][$i]['css'] != "none")
             {
                 $namafile = $json_arr[$jenis_element][$i]['css'];
-                $f = $_SERVER['DOCUMENT_ROOT']  . '/elements/html/'.$namafile;
+                $f = $_SERVER['DOCUMENT_ROOT']  . '/elements/css/'.$namafile;
                 $json_arr[$jenis_element][$i]['css'] = htmlentities(file_get_contents($f));
             }
             if($json_arr[$jenis_element][$i]['js'] != "none")
             {
                 $namafile = $json_arr[$jenis_element][$i]['js'];
-                $f = $_SERVER['DOCUMENT_ROOT']  . '/elements/html/'.$namafile;
+                $f = $_SERVER['DOCUMENT_ROOT']  . '/elements/js/'.$namafile;
                 $json_arr[$jenis_element][$i]['css'] = htmlentities(file_get_contents($f));
             }
             $namafile = $json_arr[$jenis_element][$i]['html'];

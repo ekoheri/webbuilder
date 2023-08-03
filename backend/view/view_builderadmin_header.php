@@ -13,14 +13,14 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="index">Entry</a>
+                <a class="nav-link active" aria-current="page" href="index">Entry Element</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="list">List Element</a>
             </li>
         </ul>
         <div class="d-flex" role="search">
-            <button class="btn btn-outline-success" onclick="location.href='logout';">Logout</button>
+            <button class="btn btn-outline-danger" onclick="location.href='<?php echo $baseurl?>logout';">Logout</button>
         </div>
     </div>
 </nav>

@@ -1,6 +1,7 @@
 <div class="container py-3">
     <div class="row">
         <div class="col">
+        <h2>Daftar Element HTML</h2>
             <table class="table">
                 <thead>
                     <tr>

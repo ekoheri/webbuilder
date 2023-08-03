@@ -1,24 +1,28 @@
 <?php
 class builderadmin {
     private $view;
+    private $baseurl;
     function __construct(){
         include "core/helper.php";
         $this->vew = new helper();
+        $this->baseurl = "http://".$_SERVER['SERVER_NAME'] .":".$_SERVER['SERVER_PORT']."/index.php/builderadmin/";
     }
     function index()
     {
         if(!isset($_SESSION['informasi_user'])) {
-            header("location: login");
+            header("location: ".$this->baseurl."login");
             exit;
         }
-        echo $this->vew->loadView('view/view_builderadmin_header.php', null);
+        $data_header = array();
+        $data_header["baseurl"] = $this->baseurl;
+        echo $this->vew->loadView('view/view_builderadmin_header.php', $data_header);
         echo $this->vew->loadView('view/view_builderadmin_entry.php', null);
         echo $this->vew->loadView('view/view_builderadmin_footer.php', null);
     }
     function simpan()
     {
         if(!isset($_SESSION['informasi_user'])) {
-            header("location: login");
+            header("location: ".$this->baseurl."login");
             exit;
         }
         $jenis_element = isset($_POST['jenis_element']) ? $_POST['jenis_element'] : '';
@@ -89,15 +93,18 @@ class builderadmin {
     }
     function list(){
         if(!isset($_SESSION['informasi_user'])) {
-            header("location: login");
+            header("location: ".$this->baseurl."login");
             exit;
         }
         $db_file = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/elements/db.json');
         $db_arr = json_decode($db_file, true);
 
-        $data["list_element"] = $db_arr;
-        echo $this->vew->loadView('view/view_builderadmin_header.php', null);
-        echo $this->vew->loadView('view/view_builderadmin_list.php', $data);
+        $data_header = array();
+        $data_header["baseurl"] = $this->baseurl;
+
+        $data_list["list_element"] = $db_arr;
+        echo $this->vew->loadView('view/view_builderadmin_header.php', $data_header);
+        echo $this->vew->loadView('view/view_builderadmin_list.php', $data_list);
         echo $this->vew->loadView('view/view_builderadmin_footer.php', null);
     }
     function login()
@@ -109,18 +116,32 @@ class builderadmin {
         $username = isset($_POST['username']) ? $_POST['username'] :'';
         $passwd = isset($_POST['passwd']) ? $_POST['passwd'] :'';
 
-        if($username == 'ekoheri@gmail.com' && $passwd == 'admin') {
+        $db_file = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/elements/db_user.json');
+        $db_arr = json_decode($db_file, true);
+        echo "<pre>";
+        print_r($db_arr);
+        echo "</pre>";
+        $i = 0;
+        $ketemu = false;
+        while($i < count($db_arr) && $ketemu == false) {
+            if($username == $db_arr[$i]['username'] && $passwd == $db_arr[$i]['passwd']) {
+                $ketemu = true;
+            } else {
+                $i++;
+            }
+        }
+        if($ketemu == true) {
             $_SESSION['informasi_user'] = $username;
-            header("location: index");
+            header("location: ".$this->baseurl."index");
         } else {
-            header("location: login");
+            header("location: ".$this->baseurl."login");
         }
     }
     function logout()
     {
         session_unset();
         session_destroy();
-        header("location: login");
+        header("location: ".$this->baseurl."login");
     }
 }
 ?>
