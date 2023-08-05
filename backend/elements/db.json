@@ -54,5 +54,14 @@
             "js":"none",
             "html":"footer-1.html"
         }
+    ],
+    "page":[
+        {
+            "id":"page-1",
+            "image":"page-1.png",
+            "css":"none",
+            "js":"none",
+            "html":"page-1.html"
+        }
     ]
 }

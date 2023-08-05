@@ -11,6 +11,7 @@
                             <option value="header">Header</option>
                             <option value="content">Content</option>
                             <option value="footer">Footer</option>
+                            <option value="page">Page</option>
                         </select>
                         <div id="selectHelp" class="form-text">Jenis element harus diisi.</div>
                     </div>

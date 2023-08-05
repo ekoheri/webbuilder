@@ -32,7 +32,13 @@ class api {
             {
                 $namafile = $json_arr[$jenis_element][$i]['js'];
                 $f = $_SERVER['DOCUMENT_ROOT']  . '/elements/js/'.$namafile;
-                $json_arr[$jenis_element][$i]['css'] = htmlentities(file_get_contents($f));
+                $json_arr[$jenis_element][$i]['js'] = htmlentities(file_get_contents($f));
+            }
+            if($json_arr[$jenis_element][$i]['page'] != "none")
+            {
+                $namafile = $json_arr[$jenis_element][$i]['page'];
+                $f = $_SERVER['DOCUMENT_ROOT']  . '/elements/page/'.$namafile;
+                $json_arr[$jenis_element][$i]['page'] = htmlentities(file_get_contents($f));
             }
             $namafile = $json_arr[$jenis_element][$i]['html'];
             $f = $_SERVER['DOCUMENT_ROOT']  . '/elements/html/'.$namafile;

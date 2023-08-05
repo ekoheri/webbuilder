@@ -9,6 +9,7 @@
                         <th scope="col">Header</th>
                         <th scope="col">Content</th>
                         <th scope="col">Footer</th>
+                        <th scope="col">Page</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,6 +45,15 @@
                         <?php
                                 echo "<ul>";
                                 foreach($list_element['footer'] as $x) {
+                                    echo "<li>".$x['id']."</li>";
+                                }
+                                echo "</ul>";
+                            ?>
+                        </td>
+                        <td>
+                        <?php
+                                echo "<ul>";
+                                foreach($list_element['page'] as $x) {
                                     echo "<li>".$x['id']."</li>";
                                 }
                                 echo "</ul>";
