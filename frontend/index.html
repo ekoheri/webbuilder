@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>Gadawangi Web Builder</title>
     <link href="css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link href="css/gwbuilder.css" rel="stylesheet">
   </head>
@@ -16,8 +16,7 @@
             <span>Web Builder</span>
           </a>
           <div class="d-flex" role="search">
-            <input id ="IdRequestElement" class="form-control me-2" />
-            <!--<button class="btn btn-danger" onclick="PostDownload()">Download</button>-->
+            <input hidden id ="IdRequestElement" class="form-control me-2" />
             <button class="btn btn-danger" onclick="DownloadPage()">Download</button>
           </div>
         </div>
@@ -75,21 +74,52 @@
           <div class="GW_productsItem" id="idProductItem">
             <!-- tempat render product item-->
           </div>
-        </div> <!-- Product Menu-->
+        </div> <!-- Product Menu Item-->
 
         <div class="GW_content" style="min-height: auto;">
           <!-- IdContent adalah tempat untuk menampilkan element HTML-->
-          <div class="GW_Content_win d-flex flex-column" id="IdContent"></div>
+          <div class="GW_Content_Canvas d-flex flex-column" id="IdContent"></div>
         </div> <!-- Content -->
 
+    </section>
+    <section>
+      <div id="idModalCode" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Script HTML</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>
+                <input hidden id = "idElementCode" type="text" />
+                <textarea id = "idCodeHTML" class="form-control" style=" min-width:400px; max-width:100%;min-height:400px;height:100%;width:100%;" ></textarea>
+              </p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <div>
+                <button type="button" class="btn btn-primary" onclick="CopyToCliboard()">Copy</button>
+                <button type="button" class="btn btn-danger" onclick="UpdateCode()">Save changes</button>
+              </div>
+              <div>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script lang="javascript">
+        /* untuk menampilkan tooltips*/
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-        /*AJAX*/
+        
+        /* AJAX */
+
         function createRequestObject() {
+            /* Inisiasi fungsi API bawaan dari browser yaitu XMLHttpRequest */
             var ro;
             var browser = navigator.appName;
             if(browser == "Microsoft Internet Explorer"){
@@ -101,43 +131,63 @@
         }
 
         var http = createRequestObject();
+
+        /* Sesuaikan alamat URL ini dengan alamat URL backend */
         var url_api = 'http://localhost:8080/index.php/api/';
 
         function sendRequest(method, url_target, jobs, data) {
+            /* Open : membuka koneksi ke backend */
             http.open(method, url_api+url_target);
+            /* setRequestHeader : konfigurasi request header */
             http.setRequestHeader("Cache-Control", "no-cache");
+
+            /* Eksekusi pengiriman data ke backend */
+            http.send(data);
+
+            /* 
+              onloadstart : event ketika start memuat data dari backend. 
+              Disini ditampilan gambar loading 
+            */
             http.onloadstart = function() {
               document.getElementById('idProductItem').appendChild(ShowLoading());
             }
+
+            /* onloadstart : event ketika selesai memuat data dari backend */
             http.onload = function(){
                 handleResponse(jobs);
             }
-            http.send(data);
         }
 
         function handleResponse(jobs) {
-            if(http.readyState == 4 && http.status == 200){
-                var response = http.responseText;
-                if(jobs == 'draw-elements')
-                  DrawElements(response);
-            }
+          /* Menangani response dari backend */
+          if(http.readyState == 4 && http.status == 200){
+              var response = http.responseText;
+              if(jobs == 'draw-elements')
+                DrawElements(response);
+          }
         }
 
         /* Handle UI */
         function ShowProduct(KategoriProduct)
         {
+          /* Menampilkan element daftar product */
           var product = document.getElementById("IdProduct");
           product.style.display = "block";
+
+          /* Request daftar product ke backend */
           sendRequest('get', 'elements/'+KategoriProduct.toLowerCase(), 'draw-elements', null);
         }
+
         function HideProduct()
         {
+          /* Menyembunyikan element daftar product */
           var product = document.getElementById("IdProduct");
           product.style.display = "none";
         }
 
         function ShowLoading() 
         {
+          /* Menampilkan gambar loading ketika request dari backend blm selesai */
           var divElement = document.createElement("div");
           divElement.style.textAlign = "center";
           divElement.style.padding = "70px";
@@ -153,23 +203,32 @@
 
         function DrawElements(response)
         {
-          var dataJson = JSON.parse(response);
-          //console.log(response);
+          /* Mengosongkan daftar Product Element */
           document.getElementById('idProductItem').innerHTML = "";
 
+          /* Mengkonversi String ke array JSON */
+          var dataJson = JSON.parse(response);
           for(i = 0; i < dataJson.length; i++){
+            /* 
+              Membuat element DIV product item. Isi dari divItem adalah :
+               a. Gambar product yg dikirim dari backend
+               b. hyperlink (+)
+               c. divHTL untuk menampung script HTML dari backend
+            */
             var divItem = document.createElement("div");
             divItem.className = "GW_productsItem_item";
 
+            /* Menampilkan gambar product item */
             var imgItem = document.createElement("img");
             imgItem.src = dataJson[i]['image'];
             divItem.appendChild(imgItem);
 
+            /* Menampilkan hyperlink TAMBAH dari daftar product ke Content */
             var aItem = document.createElement("a");
             aItem.href = "#";
-            //aItem.style.opacity = "1";
             aItem.addEventListener("click", AddElement.bind(event, dataJson[i]['id']));
 
+            /* Menampilkan icon + SVG */
             var svgItem = '<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">';
             svgItem += '<circle cx="18" cy="18" r="18" fill="#FF5525"></circle>';
             svgItem += '<path fill-rule="evenodd" clip-rule="evenodd" d="M18 11.25C18.1989 11.25 18.3897 11.329 18.5303 11.4697C18.671 11.6103 18.75 11.8011 18.75 12V18C18.75 18.1989 18.671 18.3897 18.5303 18.5303C18.3897 18.671 18.1989 18.75 18 18.75H12C11.8011 18.75 11.6103 18.671 11.4697 18.5303C11.329 18.3897 11.25 18.1989 11.25 18C11.25 17.8011 11.329 17.6103 11.4697 17.4697C11.6103 17.329 11.8011 17.25 12 17.25H17.25V12C17.25 11.8011 17.329 11.6103 17.4697 11.4697C17.6103 11.329 17.8011 11.25 18 11.25Z" fill="white">';
@@ -180,34 +239,66 @@
             aItem.innerHTML = svgItem;
             divItem.appendChild(aItem);
 
+            /* Menampung element HTML dari backend ke div. Hanya div ini di-sebunyikan (hidden) */
             var divHtml = document.createElement("div");
             divHtml.id = "IdProductItem-"+dataJson[i]['id'];
             divHtml.hidden = true;
             divHtml.innerHTML = StringToHTML(dataJson[i]['html']);
             divItem.appendChild(divHtml);
 
+            /* Menambahkan divItem menjadi anaknya divProduct */
             document.getElementById('idProductItem').appendChild(divItem);
           }
         }
 
         function AddElement(idItem)
         {
+          /*Membuat element DIV untuk menampung element HTML */
           var divContent = document.createElement("div");
           divContent.id = "IdElement-"+idItem;
           divContent.className = "GW_content_fill";
 
           var divFill = document.createElement("div");
+          divFill.className = "GW_content_fill_content";
+          divFill.id = "IdFillElement-"+idItem;
           divFill.innerHTML = document.getElementById('IdProductItem-'+idItem).innerHTML;
           divContent.appendChild(divFill);
 
-          var imgRemove = document.createElement("img");
-          imgRemove.src = "images/trash.svg";
-          imgRemove.className = "GW_content_delete";
-          imgRemove.addEventListener("click", RemoveElement.bind(event, idItem));
-          divContent.appendChild(imgRemove);
+          /* Membuat element DIV untuk menampung pilihan Code dan Hapus Element */
+          var divAction = document.createElement('div');
+          divAction.className = 'GW_content_action';
 
+          var aCode = document.createElement('a');
+          aCode.href = '#';
+          aCode.addEventListener("click", ShowCode.bind(event, idItem));
+          var svgACode = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="48px" height="48px" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">';
+          svgACode += '<g><path style="opacity:0.882" fill="#85c7c3" d="M 14.5,3.5 C 37.3201,0.153078 46.8201,9.81974 43,32.5C 40.8333,37.3333 37.3333,40.8333 32.5,43C 6.85917,46.0186 -1.97417,35.1852 6,10.5C 8.44117,7.54644 11.2745,5.21311 14.5,3.5 Z"/></g>';
+          svgACode += '<g><path style="opacity:1" fill="#99cecb" d="M 25.5,14.5 C 25.56,13.9569 25.8933,13.6236 26.5,13.5C 27.2745,15.3964 28.2745,17.063 29.5,18.5C 28.6618,18.8417 28.3284,19.5084 28.5,20.5C 27.0413,20.4326 25.7079,20.7659 24.5,21.5C 25.0138,19.6336 25.6805,17.8003 26.5,16C 26.4301,15.2352 26.0967,14.7352 25.5,14.5 Z"/></g>';
+          svgACode += '<g><path style="opacity:1" fill="#daecea" d="M 15.5,18.5 C 16.675,18.281 17.675,18.6143 18.5,19.5C 16.3761,20.458 14.3761,21.6246 12.5,23C 14.3451,24.4229 16.3451,25.5896 18.5,26.5C 14.984,27.0901 11.984,25.9235 9.5,23C 11.3584,21.2453 13.3584,19.7453 15.5,18.5 Z"/></g>';
+          svgACode += '<g><path style="opacity:1" fill="#dfeeed" d="M 25.5,14.5 C 26.0967,14.7352 26.4301,15.2352 26.5,16C 25.6805,17.8003 25.0138,19.6336 24.5,21.5C 23.2718,24.9563 21.7718,28.2896 20,31.5C 20.3376,25.3211 22.171,19.6545 25.5,14.5 Z"/></g>';
+          svgACode += '<g><path style="opacity:1" fill="#d9ebe9" d="M 29.5,18.5 C 38.8981,21.7035 38.7314,24.7035 29,27.5C 28.5,27.1667 28,26.8333 27.5,26.5C 29.3359,25.081 31.3359,23.9143 33.5,23C 31.8068,22.1534 30.1401,21.3201 28.5,20.5C 28.3284,19.5084 28.6618,18.8417 29.5,18.5 Z"/></g>';
+          svgACode += '</svg>';
+          aCode.innerHTML = svgACode;
+          divAction.appendChild(aCode); 
+
+          var aTrash = document.createElement('a');
+          aTrash.href = '#';
+          aTrash.addEventListener("click", RemoveElement.bind(event, idItem));
+          var svgATrash = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="48px" height="48px" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">';
+          svgATrash += '<g><path style="opacity:0.866" fill="#ff416d" d="M 14.5,3.5 C 37.3201,0.153078 46.8201,9.81974 43,32.5C 40.8333,37.3333 37.3333,40.8333 32.5,43C 6.85917,46.0186 -1.97417,35.1852 6,10.5C 8.44117,7.54644 11.2745,5.21311 14.5,3.5 Z"/></g>';
+          svgATrash += '<g><path style="opacity:1" fill="#ffd0d6" d="M 28.5,14.5 C 27.8333,18.5 27.1667,18.5 26.5,14.5C 23.6748,14.1616 21.5082,15.1616 20,17.5C 19.5172,16.552 19.3505,15.552 19.5,14.5C 22.3833,11.9103 25.3833,11.9103 28.5,14.5 Z"/></g>';
+          svgATrash += '<g><path style="opacity:1" fill="#ff6180" d="M 19.5,14.5 C 19.3505,15.552 19.5172,16.552 20,17.5C 21.5082,15.1616 23.6748,14.1616 26.5,14.5C 27.1667,18.5 27.8333,18.5 28.5,14.5C 29.404,15.209 29.7373,16.209 29.5,17.5C 31.099,17.2322 32.4324,17.5655 33.5,18.5C 27.1667,18.5 20.8333,18.5 14.5,18.5C 15.5676,17.5655 16.901,17.2322 18.5,17.5C 18.2627,16.209 18.596,15.209 19.5,14.5 Z"/></g>';
+          svgATrash += '<g><path style="opacity:1" fill="#ffccd3" d="M 14.5,18.5 C 20.8333,18.5 27.1667,18.5 33.5,18.5C 31.9238,22.951 31.0905,27.6177 31,32.5C 26.5868,33.6324 22.0868,33.7991 17.5,33C 17,32.5 16.5,32 16,31.5C 15.7083,27.118 15.2083,22.7847 14.5,18.5 Z"/></g>';
+          svgATrash += '<g><path style="opacity:1" fill="#ff436f" d="M 18.5,20.5 C 22.1667,20.5 25.8333,20.5 29.5,20.5C 29.5,24.1667 29.5,27.8333 29.5,31.5C 25.8333,31.5 22.1667,31.5 18.5,31.5C 18.5,27.8333 18.5,24.1667 18.5,20.5 Z"/></g>';
+          svgATrash += '</svg>';
+          aTrash.innerHTML = svgATrash;
+          divAction.appendChild(aTrash); 
+          divContent.appendChild(divAction);
+
+          /* Menambahkan diFill, divvAction ke anaknya divContent */
           document.getElementById('IdContent').appendChild(divContent);
 
+          /* Menampung ID element ke text input hidden IdRequestElement */
           var reqElement = document.getElementById('IdRequestElement').value;
           var obj_json;
           if(reqElement == '') {
@@ -223,27 +314,123 @@
           HideProduct();
         }
 
+        function ShowCode(idItem)
+        {
+          let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalCode')); 
+          /* Memindahkan element HTML dari Content ke TextArea */
+          document.getElementById('idElementCode').value = idItem;
+          document.getElementById('idCodeHTML').value = '';
+          document.getElementById('idCodeHTML').value = document.getElementById('IdFillElement-'+idItem).innerHTML;
+          modal.show();
+        }
+
+        function UpdateCode()
+        {
+          /* Memindahkan element HTML dari TextArea ke Content */
+          let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalCode'));
+          var newCode = document.getElementById('idCodeHTML').value;
+          var idTarget = document.getElementById('idElementCode').value;
+          document.getElementById('IdFillElement-'+idTarget).innerHTML = newCode;
+          modal.hide();
+        }
+                
         function RemoveElement(idItem)
         {
+          /* Menghapus Daftar Element yg ada di Input Hidden IdRequestElement */
           var reqElement = document.getElementById('IdRequestElement').value;
+
+          /* Convert dari String ke array JSON */
           var obj_json;
           obj_json = JSON.parse(reqElement);
           const idxObj = obj_json.findIndex(object => {
             return object.elemen === idItem;
           });
 
+          /* Convert dari array JSON ke string dan tulis ke element input hidden IdRequestElement */
           obj_json.splice(idxObj, 1);
-          var postData = JSON.stringify(obj_json);
-          if(postData == '[]')
-            postData = '';
-          document.getElementById('IdRequestElement').value = postData;
+          var ele_selected = JSON.stringify(obj_json);
+          if(ele_selected == '[]')
+          ele_selected = '';
+          document.getElementById('IdRequestElement').value = ele_selected;
 
+          /* Menghapus Element di Content */
           document.getElementById("IdElement-"+idItem).remove();
         }
 
+        function CopyToCliboard()
+        {
+          /* Men-copy tag HTML di content ke clipboard */
+          let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalCode'));
+          var copyCode = document.getElementById('idCodeHTML').value;
+          var idTarget = document.getElementById('idElementCode').value;
+
+          navigator.clipboard.writeText(copyCode);
+          modal.hide();
+        }
+
+        function DownloadPage(){
+            var data = document.getElementById('IdRequestElement').value;
+            if(data == '') {
+              alert("Tidak ada element HTML yang dipilih!");
+            }
+            else {
+              /* Generate page HTML bagian head */
+              var docHtml = document.implementation.createHTMLDocument();
+
+              /* Generate meta */
+              var meta = document.createElement('meta');
+              meta.name = 'viewport';
+              meta.content = "width=device-width, initial-scale=1";
+
+              /* Generate title */
+              var title = document.createElement("title"); 
+              title.innerHTML = 'Gadawangi Web Builder';
+              docHtml.head.appendChild(title);
+
+              /* Generate link CSS dgn referensi ke bootstrap */
+              var link = document.createElement("link");
+              link.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css';
+              link.rel = 'stylesheet';
+              docHtml.head.appendChild(link);
+
+              /*Generate page HTML bagian body */
+              var dataJson = JSON.parse(data);
+              for(i = 0; i < dataJson.length; i++){
+                var section = document.createElement("section");
+                section.id = dataJson[i]['elemen'];
+                section.innerHTML = document.getElementById('IdFillElement-'+dataJson[i]['elemen']).innerHTML;
+                docHtml.body.appendChild(section);
+              }
+
+              /* Generate script JS dgn referensi ke bootstrap */
+              var jsscript = document.createElement("script");
+              jsscript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js';
+              docHtml.body.appendChild(jsscript);
+ 
+              /* Convert Object HTML ke String */
+              var htmlFromObj = docHtml.getElementsByTagName('html');
+              var htmlString = '<html>'+'\r\n';
+              htmlString += htmlFromObj[0].innerHTML+'\r\n';
+              htmlString += '</html>';
+              
+              /* Eksekusi perintah download HTML */
+              var blob = new Blob([htmlString], { type: 'text/plain;charset=utf-8' });
+              var link = document.createElement('a');
+              link.href = window.URL.createObjectURL(blob);
+              link.download = "index.html";
+              link.click();
+            }
+        }
+
         /*
-        Fungsi ini digunakan untuk mendownload HTML dari backend
-        Hanya fungsi ini sudha tidak digunakan lagi
+        *****************************
+        Fungsi ini digunakan untuk mendownload HTML dari backend.
+        Hanya sajafungsi ini sudah tidak digunakan lagi.
+        Karena untuk fungsi download, langsung mengambil dari content. 
+        Tidak men-download dari backend lagi
+
+        Fungsi ini tidak dihapus, karena disini ada contoh penggunaan metode POST.
+        *****************************
         function PostDownload()
         {
           var data = document.getElementById('IdRequestElement').value;
@@ -254,55 +441,10 @@
         }
         */
 
-        function DownloadPage(response){
-            var data = document.getElementById('IdRequestElement').value;
-            if(data == '') {
-              alert("Tidak ada element HTML yang dipilih!");
-            }
-            else {
-              var dataJson = JSON.parse(data);
-
-              var docHtml = document.implementation.createHTMLDocument();
-              var meta = document.createElement('meta');
-              meta.name = 'viewport';
-              meta.content = "width=device-width, initial-scale=1";
-
-              var title = document.createElement("title"); 
-              title.innerHTML = 'Gadawangi Web Builder';
-              docHtml.head.appendChild(title);
-
-              var link = document.createElement("link");
-              link.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css';
-              link.rel = 'stylesheet';
-              
-              docHtml.head.appendChild(link);
-              var Scripthtml = '';
-              for(i = 0; i < dataJson.length; i++){
-                var section = document.createElement("section");
-                section.id = dataJson[i]['elemen'];
-                section. innerHTML = document.getElementById(dataJson[i]['elemen']).innerHTML;
-                docHtml.body.appendChild(section);
-              }
-              var jsscript = document.createElement("script");
-              jsscript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js';
-              docHtml.body.appendChild(jsscript);
- 
-              var htmlFromObj = docHtml.getElementsByTagName('html');
-              var htmlString = '<html>'+'\r\n';
-              htmlString += htmlFromObj[0].innerHTML+'\r\n';
-              htmlString += '</html>';
-              
-              var blob = new Blob([htmlString], { type: 'text/plain;charset=utf-8' });
-              var link = document.createElement('a');
-              link.href = window.URL.createObjectURL(blob);
-              link.download = "index.html";
-              link.click();
-            }
-        }
-
         /* Helper */
         function StringToHTML(str)
         {
+          /* Convert String ke HTML. Merubah &lt; ke < &gt; ke > dst */
           let txt = new DOMParser().parseFromString(str, "text/html");
           return txt.documentElement.textContent;
         }

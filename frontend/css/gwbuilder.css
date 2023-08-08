@@ -36,6 +36,10 @@ body {
     width: 0;
 }
 
+.w-full {
+    width: 100%;
+}
+
 .GW_sidebar_item {
     border-radius: .75rem;
     cursor: pointer;
@@ -54,7 +58,7 @@ body {
     transition-duration: .15s;
 }
 .GW_sidebar_item:hover {
-    background: rgba(89, 103, 89, 0.5);
+    background: rgb(237, 239, 239);
     -webkit-backdrop-filter: blur(50px);
     backdrop-filter: blur(50px);
 }
@@ -145,7 +149,6 @@ body {
     margin-top: 2%;
     --tw-bg-opacity: 1;
     background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
-    /*border-radius: 1rem;*/
     top : 4rem;
     display: flex;
     align-items: center;
@@ -190,7 +193,7 @@ body {
     }
 }
 
-.GW_Content_win {
+.GW_Content_Canvas {
     width: 95%;
 }
 
@@ -200,20 +203,17 @@ body {
     margin-bottom: 1.25rem;
 }
 
-
+/*
+    CSS dibawah ini digunakan pada saat generate element on the fly.
+    Jadi CSS ini banyak digunakan di code Javascript
+*/
 .GW_content_fill {
     border-radius: 1rem;
     position: relative;
     width: 100%;
     margin :0;
 }
-.GW_content_fill .GW_Content_first section {
-    border-radius: 1rem 1rem 0 0;
-}
-.GW_content_fill.GW_Content_last section {
-    border-bottom-right-radius: 1rem;
-    border-bottom-left-radius: 1rem;
-}
+
 .GW_content_fill section {
     --tw-translate-x: 0;
     --tw-translate-y: 0;
@@ -224,17 +224,34 @@ body {
     --tw-scale-x: 1;
     --tw-scale-y: 1;
 }
+
 .GW_content_fill .GW_content_fill_content {
     height: auto;
     width: 100%;
 }
-.GW_content_fill .GW_content_delete {
+
+.GW_content_fill:hover section {
+    border: 1px solid rgb(240, 225, 225);
+    border-radius: 1%;
+    --tw-shadow: 10px 0px 40px rgba(92, 128, 162, 0.1);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 transparent), var(--tw-ring-shadow, 0 0 transparent), var(--tw-shadow);
+}
+
+.GW_content_action {
+    background-color: white;
+    border: 1px solid rgb(240, 225, 225);
+    --tw-shadow: 10px 0px 40px rgba(74, 85, 95, 0.1);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 transparent), var(--tw-ring-shadow, 0 0 transparent), var(--tw-shadow);
+    border-radius: 1rem;
+    padding-top: 5px;
+    text-align: center;
     z-index: 9999;
-    cursor: pointer;
     display: none;
+    width: 180px;
+    height: 60px;
     position: absolute;
-    right: 1.75rem;
-    top: 50%;
+    top : 50%;
+    right:5px;
     --tw-translate-x: 0;
     --tw-translate-y: 0;
     --tw-rotate: 0;
@@ -245,14 +262,12 @@ body {
     transform: translateX(var(--tw-translate-x)) translateY(var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
     --tw-translate-y: -50%
 }
-.GW_content_fill:hover .GW_content_delete {
-    display: block;
-}
-.GW_content_fill:hover section {
-    --tw-shadow: 10px 0px 40px rgba(92, 128, 162, 0.1);
-    box-shadow: var(--tw-ring-offset-shadow, 0 0 transparent), var(--tw-ring-shadow, 0 0 transparent), var(--tw-shadow);
+
+.GW_content_action a {
+    margin: 0 10px 0 0;
+    cursor: pointer;
 }
 
-.w-full {
-    width: 100%;
+.GW_content_fill:hover .GW_content_action {
+    display: block;
 }
