@@ -29,14 +29,6 @@
                         <textarea name="script_html" class="form-control" placeholder="Isi script HTML disini" id="floatingTextareaHTML" style="height:200px;"></textarea>
                         <label for="floatingTextareaHTML">Tambahkan script HTML disini</label>
                     </div>
-                    <div class="mb-3 form-floating">
-                        <textarea name="script_css" class="form-control" placeholder="Isi script CSS disini" id="floatingTextareaCSS" style="height:200px;"></textarea>
-                        <label for="floatingTextareaCSS">Tambahkan script CSS disini</label>
-                    </div>
-                    <div class="mb-3 form-floating">
-                        <textarea name="script_js" class="form-control" placeholder="Isi script JS disini" id="floatingTextareaJS" style="height:200px;"></textarea>
-                        <label for="floatingTextareaJS">Tambahkan script JS disini</label>
-                    </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
             </div>

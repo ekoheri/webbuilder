@@ -4,7 +4,7 @@ $mymvc = new index;
 $mymvc->run();
 
 class index {
-    private $controller = 'builderadmin';
+    private $controller = 'admin';
     private $method = 'index';
     private $parameter = array();
 
