@@ -110,6 +110,19 @@
           </div>
         </div>
       </div>
+
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <strong class="me-auto">&copy; Eko Heri Susanto</strong>
+            <small>Created on 2023</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">
+            This software has a GPL (General Public License), which means that the user is given the right to use, modify and redistribute this software according to the terms stated in the GPL license.
+          </div>
+        </div>
+      </div>
     </section>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
@@ -175,6 +188,9 @@
         window.addEventListener('load', () => {
           /* tampilkan element konten kosong */
           document.getElementById('IdContent').appendChild(ShowBlankContent());
+          const toastLiveExample = document.getElementById('liveToast');
+          const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+          toastBootstrap.show();
         });
 
         function ShowProduct(KategoriProduct)
