@@ -16,8 +16,9 @@
             <span>Web Builder</span>
           </a>
           <div class="d-flex" role="search">
-            <input hidden id ="IdRequestElement" class="form-control me-2" />
-            <button class="btn btn-danger" onclick="PostDownload()">Download</button>
+            <input id ="IdRequestElement" class="form-control me-2" />
+            <!--<button class="btn btn-danger" onclick="PostDownload()">Download</button>-->
+            <button class="btn btn-danger" onclick="DownloadPage()">Download</button>
           </div>
         </div>
       </nav>
@@ -77,9 +78,8 @@
         </div> <!-- Product Menu-->
 
         <div class="GW_content" style="min-height: auto;">
-          <div class="GW_Content_win d-flex flex-column" id="IdContent">
-            <!-- tempat render content -->
-          </div>
+          <!-- IdContent adalah tempat untuk menampilkan element HTML-->
+          <div class="GW_Content_win d-flex flex-column" id="IdContent"></div>
         </div> <!-- Content -->
 
     </section>
@@ -120,8 +120,6 @@
                 var response = http.responseText;
                 if(jobs == 'draw-elements')
                   DrawElements(response);
-                else if(jobs == 'download-page')
-                  DownloadPage(response);
             }
         }
 
@@ -156,7 +154,7 @@
         function DrawElements(response)
         {
           var dataJson = JSON.parse(response);
-          console.log(response);
+          //console.log(response);
           document.getElementById('idProductItem').innerHTML = "";
 
           for(i = 0; i < dataJson.length; i++){
@@ -243,6 +241,9 @@
           document.getElementById("IdElement-"+idItem).remove();
         }
 
+        /*
+        Fungsi ini digunakan untuk mendownload HTML dari backend
+        Hanya fungsi ini sudha tidak digunakan lagi
         function PostDownload()
         {
           var data = document.getElementById('IdRequestElement').value;
@@ -251,14 +252,54 @@
           else
             sendRequest('post', 'download', 'download-page', data);
         }
+        */
 
         function DownloadPage(response){
-            var blob = new Blob([response]);
-            var link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = "index.html";
-            link.click();
+            var data = document.getElementById('IdRequestElement').value;
+            if(data == '') {
+              alert("Tidak ada element HTML yang dipilih!");
+            }
+            else {
+              var dataJson = JSON.parse(data);
+
+              var docHtml = document.implementation.createHTMLDocument();
+              var meta = document.createElement('meta');
+              meta.name = 'viewport';
+              meta.content = "width=device-width, initial-scale=1";
+
+              var title = document.createElement("title"); 
+              title.innerHTML = 'Gadawangi Web Builder';
+              docHtml.head.appendChild(title);
+
+              var link = document.createElement("link");
+              link.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css';
+              link.rel = 'stylesheet';
+              
+              docHtml.head.appendChild(link);
+              var Scripthtml = '';
+              for(i = 0; i < dataJson.length; i++){
+                var section = document.createElement("section");
+                section.id = dataJson[i]['elemen'];
+                section. innerHTML = document.getElementById(dataJson[i]['elemen']).innerHTML;
+                docHtml.body.appendChild(section);
+              }
+              var jsscript = document.createElement("script");
+              jsscript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js';
+              docHtml.body.appendChild(jsscript);
+ 
+              var htmlFromObj = docHtml.getElementsByTagName('html');
+              var htmlString = '<html>'+'\r\n';
+              htmlString += htmlFromObj[0].innerHTML+'\r\n';
+              htmlString += '</html>';
+              
+              var blob = new Blob([htmlString], { type: 'text/plain;charset=utf-8' });
+              var link = document.createElement('a');
+              link.href = window.URL.createObjectURL(blob);
+              link.download = "index.html";
+              link.click();
+            }
         }
+
         /* Helper */
         function StringToHTML(str)
         {
@@ -267,4 +308,4 @@
         }
     </script>
   </body>
-</html> 
+</html>
