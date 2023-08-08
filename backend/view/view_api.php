@@ -85,13 +85,6 @@
                     <p>Method : GET</p>
                     <p>contoh localhost : http://localhost:8080/api/elements/navbar</p>
                 </li>
-                <li>
-                    <p>Mengunduh (download) desain website</p>
-                    <p>[URL Backend Server]/api/download</p>
-                    <p>Method : POST</p>
-                    <p>contoh localhost : http://localhost:8080/api/download</p>
-                    <p>Body Data JSON dengan format [{"elemen" : "ID Element", "username" : ""}]</p>
-                </li>
             </ol>    
         </div>    
     </div>
