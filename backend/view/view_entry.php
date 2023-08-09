@@ -7,8 +7,8 @@
                         <form method="post" action="simpan" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="SelectElement" class="form-label">Jenis Element</label>
-                                <select name="jenis_element" class="form-select" id="SelectElement" aria-describedby="selectHelp">
-                                    <option selected>Pilih salah satu element</option>
+                                <select name="jenis_element" class="form-select" onchange="PilihElement(this.value)" id="SelectElement" aria-describedby="selectHelp">
+                                    <option value="" selected>Pilih salah satu element</option>
                                     <option value="navbar">Navbar</option>
                                     <option value="header">Header</option>
                                     <option value="content">Content</option>
@@ -19,8 +19,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="InputIDElement" class="form-label">ID Element</label>
-                                <input name="id_element"type="text" class="form-control" id="InputIDElement" aria-describedby="idElementHelp" />
-                                <div id="idElementHelp" class="form-text">ID Element harus diisi.</div>
+                                <input name="id_element" id ="IdElement" type="text" class="form-control" id="InputIDElement" aria-describedby="idElementHelp" />
+                                <div id="idElementHelp" class="form-text">ID Element sudah terisi otomatis. Namun anda boleh menggantinya</div>
                             </div>
                             <div class="mb-3">
                                 <label for="formFile" class="form-label">Gambar Element</label>
@@ -38,4 +38,21 @@
             </div>
         </div>
     </div>
+    <script language="javascript">
+        function PilihElement(pilihan) {
+            const data = {<?php
+                $isi = ''; 
+                foreach($jumlah_data as $key => $value) {
+                    if($isi == '')
+                        $isi = $key . ":" . $value;
+                    else
+                        $isi .= ",".$key . ":" . $value;
+                }
+                echo $isi;
+                ?>};
+            if(pilihan != '') {
+                document.getElementById('IdElement').value = pilihan+"-"+(data[pilihan]+1);
+            }
+        }
+    </script>        
     

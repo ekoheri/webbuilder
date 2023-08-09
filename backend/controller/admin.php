@@ -32,10 +32,22 @@ class admin {
             header("location: ".$this->baseurl."login");
             exit;
         }
+        $db_file = file_get_contents($this->dbFile);
+        $db_arr = json_decode($db_file, true);
+
+        $jumlah_data = array();
+        foreach($db_arr as $key => $value) {
+            $jumlah_data[$key] = count ($value);
+        }
+
+        //print_r($jumlah_data);
         $data_header = array();
         $data_header["baseurl"] = $this->baseurl;
+        $data_content = array();
+        $data_content["jumlah_data"] = $jumlah_data;
+
         echo $this->vew->loadView('view/view_header.php', $data_header);
-        echo $this->vew->loadView('view/view_entry.php', null);
+        echo $this->vew->loadView('view/view_entry.php', $data_content);
         echo $this->vew->loadView('view/view_footer.php', null);
     }
 

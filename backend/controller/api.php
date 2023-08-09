@@ -20,7 +20,7 @@ class api {
         
         $this->dirElementHtml =  $this->dirRoot .'/database/elements/html/';
         
-        $this->urlImages =  $this->baseurl .'."/database/elements/images/';
+        $this->urlImages =  $this->baseurl .'/database/elements/images/';
 
         if(file_exists($this->dbFile))
             $this->dbExists = true;
