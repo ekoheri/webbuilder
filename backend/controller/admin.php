@@ -163,7 +163,9 @@ class admin {
 
     function submitlogin(){
         $username = isset($_POST['username']) ? $_POST['username'] :'';
-        $passwd = isset($_POST['passwd']) ? $_POST['passwd'] :'';
+        $passwd = isset($_POST['passwd']) ? MD5($_POST['passwd']) :'';
+
+        echo $passwd;
 
         $db_file = file_get_contents($this->dbUserFile);
         $db_arr = json_decode($db_file, true);
@@ -190,6 +192,65 @@ class admin {
         header("location: ".$this->baseurl."login");
     }
 
+    function Pengguna() {
+        if(!isset($_SESSION['informasi_user'])) {
+            header("location: ".$this->baseurl."login");
+            exit;
+        }
+        $data_header = array();
+        $data_header["baseurl"] = $this->baseurl;
+        $data_content = array();
+        $data_content["username"] = $_SESSION['informasi_user'];
+
+        echo $this->vew->loadView('view/view_header.php', $data_header);
+        echo $this->vew->loadView('view/view_user.php', $data_content);
+        echo $this->vew->loadView('view/view_footer.php', null);
+    }
+
+    function GantiPassword() {
+        if(!isset($_SESSION['informasi_user'])) {
+            header("location: ".$this->baseurl."login");
+            exit;
+        }
+
+        $username = isset($_POST['username']) ? $_POST['username'] :'';
+        $passwd_lama = isset($_POST['passwd_lama']) ? MD5($_POST['passwd_lama']) :'';
+        $passwd_baru = isset($_POST['passwd_baru']) ? MD5($_POST['passwd_baru']) :'';
+
+        $db_file = file_get_contents($this->dbUserFile);
+        $db_arr = json_decode($db_file, true);
+        $i = 0;
+        $ketemu = false;
+
+        while($i < count($db_arr) && $ketemu == false) {
+            if($username == $db_arr[$i]['username'] && $passwd_lama == $db_arr[$i]['passwd']) {
+                $ketemu = true;
+            } else {
+                $i++;
+            }
+        }
+        if($ketemu == true) {
+            echo "<pre>";
+            print_r($db_arr);
+            echo "</pre>";
+
+            //array_replace($db_arr[$i], $pass_baru);
+            $db_arr[$i]['username'] = $username;
+            $db_arr[$i]['passwd'] = $passwd_baru;
+            
+            echo "<pre>";
+            print_r($db_arr);
+            echo "</pre>";
+
+            $dbUserFile = fopen($this->dbUserFile, "w") or die("Unable to open file User");
+            fwrite($dbUserFile, json_encode($db_arr));
+            fclose($dbUserFile);
+
+            echo "<h5>Sukses merubah Password</h5>";
+            echo "<p><a href=\"".$this->baseurl."index\">Kembali ke halaman depan</a></p>";
+        }
+    }
+
     private function init(){
         if(!is_dir($this->dirRoot .'/database')) {
             mkdir($this->dirRoot .'/database');
@@ -200,7 +261,7 @@ class admin {
             $user = array (
                 array(
                     "username" => "admin@gadawangi.com",
-                    "passwd" => "admin123"
+                    "passwd" => MD5("admin123")
                 )
             );
 

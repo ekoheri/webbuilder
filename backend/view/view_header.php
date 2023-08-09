@@ -21,6 +21,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="<?php echo $baseurl?>showapikey">Token API</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo $baseurl?>pengguna">Pengguna</a>
+            </li>
         </ul>
         <div class="d-flex" role="search">
             <button class="btn btn-outline-danger" onclick="location.href='<?php echo $baseurl?>logout';">Logout</button>
