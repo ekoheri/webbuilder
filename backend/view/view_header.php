@@ -13,10 +13,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="index">Entry Element</a>
+                <a class="nav-link active" aria-current="page" href="<?php echo $baseurl?>index">Entry Element</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="list">List Element</a>
+                <a class="nav-link" href="<?php echo $baseurl?>list">List Element</a>
             </li>
         </ul>
         <div class="d-flex" role="search">

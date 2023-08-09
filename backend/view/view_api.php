@@ -7,6 +7,17 @@
 <div class="container py-3">
     <div class="row">
         <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <p>Get API Key</p>
+                    <p><input class="form-control" readonly type="text" value ="<?php echo $api_key ?>" /></p>
+                    <p>Pasang API Key ini di Header ketika melakukan request ke Server</p>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="row py-5">
+        <div class="col">
             <h2>Daftar Element HTML</h2>
             <table class="table">
                 <thead>

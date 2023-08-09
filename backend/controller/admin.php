@@ -2,13 +2,32 @@
 class admin {
     private $view;
     private $baseurl;
+    private $dirRoot;
+    private $dirElementHtml;
+    private $dirElementImage;
+
+    private $dbFile;
+    private $dbUserFile;
+    private $dbApiKey;
+
     function __construct(){
         include "core/helper.php";
         $this->vew = new helper();
         $this->baseurl = "http://".$_SERVER['SERVER_NAME'] .":".$_SERVER['SERVER_PORT']."/index.php/admin/";
+
+        $this->dirRoot = $_SERVER['DOCUMENT_ROOT']; 
+
+        $this->dbFile = $this->dirRoot .'/database/db.json';
+        $this->dbUserFile = $this->dirRoot .'/database/db_user.json';
+        $this->dbApiKey = $this->dirRoot .'/database/db_api_key.json';
+
+        $this->dirElementHtml =  $this->dirRoot .'/database/elements/html/';
+        $this->dirElementImage =  $this->dirRoot .'/database/elements/images/';
+
+        $this->init();
     }
-    function index()
-    {
+
+    function index(){
         if(!isset($_SESSION['informasi_user'])) {
             header("location: ".$this->baseurl."login");
             exit;
@@ -19,8 +38,8 @@ class admin {
         echo $this->vew->loadView('view/view_entry.php', null);
         echo $this->vew->loadView('view/view_footer.php', null);
     }
-    function simpan()
-    {
+
+    function simpan() {
         if(!isset($_SESSION['informasi_user'])) {
             header("location: ".$this->baseurl."login");
             exit;
@@ -31,7 +50,6 @@ class admin {
         $script_html = isset($_POST['script_html']) ? $_POST['script_html'] : '';
         
         if($img_element != '') {
-            $folder = $_SERVER['DOCUMENT_ROOT'].'/elements';
             $ekstensi_diperbolehkan	= array('png','jpg');
             $x = explode('.', $img_element);
             $ekstensi = strtolower(end($x));
@@ -39,13 +57,13 @@ class admin {
             $file_tmp = $_FILES['img_element']['tmp_name'];	
             if(in_array($ekstensi, $ekstensi_diperbolehkan) === true){
                 if($ukuran < 1044070){
-                    move_uploaded_file($file_tmp, $folder.'/images/'.$id_element.".".$ekstensi);
+                    move_uploaded_file($file_tmp, $this->dirElementImage.$id_element.".".$ekstensi);
 
-                    $html_file = fopen($folder.'/html/'.$id_element.".html", "w") or die("Unable to open file HTML");
+                    $html_file = fopen($this->dirElementHtml.$id_element.".html", "w") or die("Unable to open file HTML");
                     fwrite($html_file, $script_html);
                     fclose($html_file);
 
-                    $db_file = file_get_contents($folder.'/db.json');
+                    $db_file = file_get_contents($this->dbFile);
                     $db_arr = json_decode($db_file, true);
 
                     $element_entry = array(
@@ -72,7 +90,7 @@ class admin {
                     }
                     $db_str = json_encode($db_arr);
 
-                    $db_file = fopen($folder."/db.json", "w") or die("Unable to open file HTML");
+                    $db_file = fopen($this->dbFile, "w") or die("Unable to open file HTML");
                     fwrite($db_file, $db_str);
                     fclose($db_file);
 
@@ -87,12 +105,13 @@ class admin {
             echo "<p><a href=\"index\">Kembali ke halaman entry</a></p>";
         }   
     }
+
     function list(){
         if(!isset($_SESSION['informasi_user'])) {
             header("location: ".$this->baseurl."login");
             exit;
         }
-        $db_file = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/elements/db.json');
+        $db_file = file_get_contents($this->dbFile);
         $db_arr = json_decode($db_file, true);
 
         $data_header = array();
@@ -103,16 +122,16 @@ class admin {
         echo $this->vew->loadView('view/view_list.php', $data_list);
         echo $this->vew->loadView('view/view_footer.php', null);
     }
-    function login()
-    {
+
+    function login() {
         echo $this->vew->loadView('view/view_login.php', null);
     }
-    function submitlogin()
-    {
+
+    function submitlogin(){
         $username = isset($_POST['username']) ? $_POST['username'] :'';
         $passwd = isset($_POST['passwd']) ? $_POST['passwd'] :'';
 
-        $db_file = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/elements/db_user.json');
+        $db_file = file_get_contents($this->dbUserFile);
         $db_arr = json_decode($db_file, true);
         $i = 0;
         $ketemu = false;
@@ -130,11 +149,51 @@ class admin {
             header("location: ".$this->baseurl."login");
         }
     }
-    function logout()
-    {
+
+    function logout(){
         session_unset();
         session_destroy();
         header("location: ".$this->baseurl."login");
+    }
+
+    private function init(){
+        if(!is_dir($this->dirRoot .'/database')) {
+            mkdir($this->dirRoot .'/database');
+            mkdir($this->dirRoot .'/database/elements');
+            mkdir($this->dirRoot .'/database/elements/html');
+            mkdir($this->dirRoot .'/database/elements/images');
+
+            $user = array (
+                array(
+                    "username" => "admin@gadawangi.com",
+                    "passwd" => "admin123"
+                )
+            );
+
+            $dbUserFile = fopen($this->dbUserFile, "w") or die("Unable to open file HTML");
+            fwrite($dbUserFile, json_encode($user));
+            fclose($dbUserFile);
+
+            $db = array(
+                "navbar" => array (),
+                "header" => array (),
+                "content" => array (),
+                "footer" => array (),
+                "page" => array ()
+            );
+
+            $dbFile = fopen($this->dbFile, "w") or die("Unable to open file HTML");
+            fwrite($dbFile, json_encode($db));
+            fclose($dbFile);
+
+            $db_api_key = array(
+                "api_key" => MD5("gadawangi-apy-key")
+            );
+
+            $dbApiKey = fopen($this->dbApiKey, "w") or die("Unable to open file HTML");
+            fwrite($dbApiKey, json_encode($db_api_key));
+            fclose($dbApiKey);
+        }
     }
 }
 ?>
