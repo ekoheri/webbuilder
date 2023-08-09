@@ -149,12 +149,14 @@
 
         /* Sesuaikan alamat URL ini dengan alamat URL backend */
         var url_api = 'http://localhost:8080/index.php/api/';
+        var api_key = '666839b212ec863f45bc4f4fc7fdeffd';
 
         function sendRequest(method, url_target, jobs, data) {
             /* Open : membuka koneksi ke backend */
             http.open(method, url_api+url_target);
             /* setRequestHeader : konfigurasi request header */
             http.setRequestHeader("Cache-Control", "no-cache");
+            http.setRequestHeader("api-key", api_key);
 
             /* Eksekusi pengiriman data ke backend */
             http.send(data);
@@ -244,7 +246,7 @@
           /* Menampilkan gambar loading ketika request dari backend blm selesai */
           var divElement = document.createElement("div");
           divElement.style.textAlign = "center";
-          divElement.style.padding = "70px";
+          divElement.style.padding = "30px";
           divElement.style.height = "100%";
 
           var imgElement = document.createElement("img");
