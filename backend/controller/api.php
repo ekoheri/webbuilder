@@ -52,7 +52,7 @@ class api {
 
         
         $data_list["list_element"] = $db_arr;
-        $data_list["api_key"] = $this->api_key;
+        $data_list["baseurl"] = $this->baseurl;
         echo $view->loadView('view/view_api.php', $data_list);
     }
 

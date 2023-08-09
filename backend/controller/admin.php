@@ -123,6 +123,28 @@ class admin {
         echo $this->vew->loadView('view/view_footer.php', null);
     }
 
+    function ShowApiKey() {
+        if(!isset($_SESSION['informasi_user'])) {
+            header("location: ".$this->baseurl."login");
+            exit;
+        }
+        
+        $api_key = '';
+        if(file_exists($this->dbApiKey)) {
+            $db_api = file_get_contents($this->dbApiKey);
+            $api_arr = json_decode($db_api, true);
+            $api_key = $api_arr['api_key'];
+        }
+
+        $data_header = array();
+        $data_header["baseurl"] = $this->baseurl;
+        $data_content = array();
+        $data_content["api_key"] = $api_key;
+        echo $this->vew->loadView('view/view_header.php', $data_header);
+        echo $this->vew->loadView('view/view_apikey.php', $data_content);
+        echo $this->vew->loadView('view/view_footer.php', null);        
+    }
+
     function login() {
         echo $this->vew->loadView('view/view_login.php', null);
     }
