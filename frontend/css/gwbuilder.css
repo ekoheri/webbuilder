@@ -88,6 +88,12 @@ body {
     display: none;
 }
 
+@media(max-width:480px) {
+    .GW_products {
+        width: 60%
+    }
+}
+
 .GW_products:target {
     pointer-events: auto;
 }
