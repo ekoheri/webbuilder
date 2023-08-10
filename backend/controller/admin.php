@@ -15,7 +15,7 @@ class admin {
         $this->vew = new helper();
         
         $protocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
-        $this->baseurl = $protocol.$_SERVER['SERVER_NAME'] .":".$_SERVER['SERVER_PORT']."/index.php/admin/";
+        $this->baseurl = $protocol."://".$_SERVER['SERVER_NAME'] .":".$_SERVER['SERVER_PORT']."/index.php/admin/";
 
         $this->dirRoot = $_SERVER['DOCUMENT_ROOT']; 
 
