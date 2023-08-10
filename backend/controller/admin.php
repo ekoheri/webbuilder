@@ -200,6 +200,7 @@ class admin {
         $data_header = array();
         $data_header["baseurl"] = $this->baseurl;
         $data_content = array();
+        $data_content["baseurl"] = $this->baseurl;
         $data_content["username"] = $_SESSION['informasi_user'];
 
         echo $this->vew->loadView('view/view_header.php', $data_header);
