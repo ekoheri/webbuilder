@@ -254,10 +254,21 @@ class admin {
     private function init(){
         if(!is_dir($this->dirRoot .'/database')) {
             mkdir($this->dirRoot .'/database');
-            mkdir($this->dirRoot .'/database/elements');
-            mkdir($this->dirRoot .'/database/elements/html');
-            mkdir($this->dirRoot .'/database/elements/images');
+        }
 
+        if(!is_dir($this->dirRoot .'/database/elements')) {
+            mkdir($this->dirRoot .'/database/elements');
+        }
+
+        if(!is_dir($this->dirRoot .'/database/elements/html')) {
+            mkdir($this->dirRoot .'/database/elements/html');
+        }
+
+        if(!is_dir($this->dirRoot .'/database/elements/images')) {
+            mkdir($this->dirRoot .'/database/elements/images');
+        }
+            
+        if(!file_exists($this->dbUserFile)) {
             $user = array (
                 array(
                     "username" => "admin@gadawangi.com",
@@ -268,7 +279,9 @@ class admin {
             $dbUserFile = fopen($this->dbUserFile, "w") or die("Unable to open file HTML");
             fwrite($dbUserFile, json_encode($user));
             fclose($dbUserFile);
+        }
 
+        if(!file_exists($this->dbFile)) {
             $db = array(
                 "navbar" => array (),
                 "header" => array (),
@@ -280,15 +293,18 @@ class admin {
             $dbFile = fopen($this->dbFile, "w") or die("Unable to open file HTML");
             fwrite($dbFile, json_encode($db));
             fclose($dbFile);
-
+        }        
+            
+        if(!file_exists($this->dbApiKey)) {
+            $key = "gadawangi-api-key-".time();
             $db_api_key = array(
-                "api_key" => MD5("gadawangi-apy-key")
+                "api_key" => MD5($key)
             );
 
             $dbApiKey = fopen($this->dbApiKey, "w") or die("Unable to open file HTML");
             fwrite($dbApiKey, json_encode($db_api_key));
             fclose($dbApiKey);
         }
-    }
+    } //end function init
 }
 ?>
