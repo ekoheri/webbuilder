@@ -13,7 +13,9 @@ class admin {
     function __construct(){
         include "core/helper.php";
         $this->vew = new helper();
-        $this->baseurl = "http://".$_SERVER['SERVER_NAME'] .":".$_SERVER['SERVER_PORT']."/index.php/admin/";
+        
+        $protocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
+        $this->baseurl = $protocol.$_SERVER['SERVER_NAME'] .":".$_SERVER['SERVER_PORT']."/index.php/admin/";
 
         $this->dirRoot = $_SERVER['DOCUMENT_ROOT']; 
 
@@ -158,7 +160,9 @@ class admin {
     }
 
     function login() {
-        echo $this->vew->loadView('view/view_login.php', null);
+        $data = array();
+        $data["baseurl"] = $this->baseurl;
+        echo $this->vew->loadView('view/view_login.php', $data);
     }
 
     function submitlogin(){

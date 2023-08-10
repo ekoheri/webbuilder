@@ -10,7 +10,8 @@ class api {
     private $dirElementImages;
     
     function __construct(){
-        $this->baseurl = "http://".$_SERVER['SERVER_NAME'] .":".$_SERVER['SERVER_PORT'];
+        $protocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
+        $this->baseurl = $protocol.$_SERVER['SERVER_NAME'] .":".$_SERVER['SERVER_PORT'];
 
         $this->dirRoot = $_SERVER['DOCUMENT_ROOT']; 
 
