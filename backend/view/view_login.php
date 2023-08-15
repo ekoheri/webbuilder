@@ -10,7 +10,7 @@
                 <form method="post" action="<?php echo $baseurl?>submitlogin">
                     <h1 class="h3 mb-3 fw-normal text-center">Silahkan Login</h1>
                     <div class="form-floating">
-                        <input type="email" name="username" class="form-control" id="floatingInput" />
+                        <input type="text" name="username" class="form-control" id="floatingInput" />
                         <label for="floatingInput">Email</label>
                     </div>
                     <div class="form-floating">

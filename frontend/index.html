@@ -127,12 +127,7 @@
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script lang="javascript">
-        /* untuk menampilkan tooltips */
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-        
         /* AJAX */
-
         function createRequestObject() {
             /* Inisiasi fungsi API bawaan dari browser yaitu XMLHttpRequest */
             var ro;
@@ -148,8 +143,9 @@
         var http = createRequestObject();
 
         /* Sesuaikan alamat URL ini dengan alamat URL backend */
-        var url_api = 'http://localhost:8080/index.php/api/';
-        var api_key = '666839b212ec863f45bc4f4fc7fdeffd';
+        //http://localhost:8080/index.php/api/
+        var url_api = 'https://adminwb.gadawangi.com:443/index.php/api/';
+        var api_key = 'cae549f86ecf80d75e17541f360913c1';
 
         function sendRequest(method, url_target, jobs, data) {
             /* Open : membuka koneksi ke backend */
@@ -188,6 +184,10 @@
 
         /* Deteksi event body onload */
         window.addEventListener('load', () => {
+          /* untuk menampilkan tooltips */
+          const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+          const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        
           /* tampilkan element konten kosong */
           document.getElementById('IdContent').appendChild(ShowBlankContent());
           const toastLiveExample = document.getElementById('liveToast');
