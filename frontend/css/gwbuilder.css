@@ -1,0 +1,298 @@
+@import "https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap";
+@import "https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap";
+
+:root {
+    -moz-tab-size: 4;
+    tab-size: 4;
+}
+a {
+    text-decoration: none;
+} 
+body {
+    font-family: system-ui, -apple-system, segoe ui, Roboto, Helvetica, Arial, sans-serif, apple color emoji, segoe ui emoji;
+}
+
+.GW_sidebar {
+    max-height: 33rem;
+    --tw-bg-opacity: 1;
+    background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
+    border: 1px solid rgb(240, 255, 255);
+    border-radius: 1rem;
+    margin-right: 1.25rem;
+    overflow-y: auto;
+    padding: 2.5rem 1.25rem;
+    position: fixed;
+    top : 4rem;
+    left: 1.5rem;
+    --tw-shadow: 10px 0px 40px rgba(92, 128, 162, 0.1);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 transparent), var(--tw-ring-shadow, 0 0 transparent), var(--tw-shadow);
+    z-index: 150;
+}
+@media(max-width:768px) {
+    .GW_sidebar {
+    --tw-shadow: 10px 0px 40px rgba(92, 128, 162, 0.1);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 transparent), var(--tw-ring-shadow, 0 0 transparent), var(--tw-shadow);
+}
+}.GW_sidebar::-webkit-scrollbar {
+    width: 0;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.GW_sidebar_item {
+    border-radius: .75rem;
+    cursor: pointer;
+    margin-bottom: .25rem;
+    position: relative;
+    z-index: 999999;
+}
+.GW_sidebar_item div {
+    display: flex;
+    align-items: center;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    padding-left: 1.25rem;
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-duration: .15s;
+}
+.GW_sidebar_item:hover {
+    background: rgb(237, 239, 239);
+    -webkit-backdrop-filter: blur(50px);
+    backdrop-filter: blur(50px);
+}
+.GW_sidebar_item:hover p {
+    color: #171046;
+    font-weight: 700;
+}
+
+/*products menu */
+.GW_products {
+    --tw-bg-opacity: 1;
+    background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
+    border: 1px solid rgb(240, 255, 255);
+    border-radius: 1rem;
+    overflow: auto;
+    padding: 2rem;
+    position: fixed;
+    --tw-shadow: 10px 0px 40px rgba(92, 128, 162, 0.1);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 transparent), var(--tw-ring-shadow, 0 0 transparent), var(--tw-shadow);
+    width: 20rem;
+    max-height: 36rem;
+    top : 4rem;
+    left: calc(2.5rem + 95px);
+    transform: translateX(0%); 
+    z-index: 999;
+    display: none;
+}
+
+@media(max-width:480px) {
+    .GW_products {
+        width: 60%;
+    }
+}
+
+.GW_products:target {
+    pointer-events: auto;
+}
+
+.GW_products::-webkit-scrollbar {
+    width: 0;
+}
+
+.GW_productsItem {
+    margin-top: 20px;
+    height: 400px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.GW_productsItem_item {
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 1.25rem;
+    position: relative;
+    width: 100%;
+    border: 1px solid #e7eaf4;
+    min-height: 60px;
+}
+.GW_productsItem_item img {
+    border-radius: 1rem;
+    height: 100%;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 100%;
+}
+
+.GW_productsItem_item a {
+    cursor: pointer;
+    position: absolute;
+    right: .5rem;
+    bottom: .5rem;
+    border-radius: 50%;
+    display: none;
+}
+
+.GW_productsItem_item:hover a {
+    display: block;
+}
+
+.GW_Products_close {
+    position: absolute;
+    top:5px;
+    right: 10px;
+}
+
+/* Content */
+
+.GW_content {
+    width: 100%;
+    min-height:auto;
+    margin-left: 2%;
+    margin-top: 2%;
+    --tw-bg-opacity: 1;
+    background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
+    top : 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 1280px;
+}
+
+@media(min-width:640px) {
+    .GW_content {
+        max-width: 640px;
+        min-height:auto;
+    }
+}
+@media(min-width:768px) {
+    .GW_content {
+        max-width: 768px;
+        min-height:auto;
+    }
+}
+@media(min-width:1024px) {
+    .GW_content {
+        max-width: 1024px;
+        min-height:auto;
+    }
+}
+@media(min-width:1280px) {
+    .GW_content {
+        max-width: 1280px;
+        min-height:auto;
+    }
+}
+@media(min-width:1536px) {
+    .GW_content {
+        max-width: 1536px;
+        min-height:auto;
+    }
+}
+
+@media(max-width:768px) {
+    .GW_content {
+        width: 100%
+    }
+}
+
+.GW_Content_Canvas {
+    width: 95%;
+}
+
+.GW_content .GW_Content_svg_blank {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1.25rem;
+}
+
+/*
+    CSS dibawah ini digunakan pada saat generate element on the fly.
+    Jadi CSS ini banyak digunakan di code Javascript
+*/
+.GW_content_fill {
+    border-radius: 1rem;
+    position: relative;
+    width: 100%;
+    margin :0;
+}
+
+.GW_content_fill section {
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    transform: translateX(var(--tw-translate-x)) translateY(var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+}
+
+.GW_content_fill .GW_content_fill_content {
+    height: auto;
+    width: 100%;
+}
+
+.GW_content_fill :hover section {
+    border: 1px solid rgb(240, 225, 225);
+    border-radius: 1%;
+    --tw-shadow: 10px 0px 40px rgba(92, 128, 162, 0.1);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 transparent), var(--tw-ring-shadow, 0 0 transparent), var(--tw-shadow);
+}
+
+.GW_content_action {
+    background-color: white;
+    border: 1px solid rgb(240, 225, 225);
+    --tw-shadow: 10px 0px 40px rgba(74, 85, 95, 0.1);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 transparent), var(--tw-ring-shadow, 0 0 transparent), var(--tw-shadow);
+    border-radius: 1rem;
+    padding-top: 5px;
+    text-align: center;
+    z-index: 9999;
+    display: none;
+    width: 180px;
+    height: 60px;
+    position: absolute;
+    top : 50%;
+    right:5px;
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+    transform: translateX(var(--tw-translate-x)) translateY(var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+    --tw-translate-y: -50%
+}
+
+.GW_content_action a {
+    margin: 0 10px 0 0;
+    cursor: pointer;
+}
+
+.GW_content_fill:hover .GW_content_action {
+    display: block;
+}
+
+.GW_content_blank 
+{
+    position:absolute; 
+    width:90%; 
+    height: 80%;
+}
+
+.GW_content_blank_fill
+{
+    margin: 0; 
+    position: absolute; 
+    left:50%;
+    top: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
