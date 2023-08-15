@@ -111,6 +111,38 @@
         </div>
       </div>
 
+      <div id="idModalChangeImage" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Change Image</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p><input hidden id = "idImage" type="text" /></p>
+              <p>
+                  <input type="file" onchange="encodeImageFile(this)" />
+              </p>
+              <p>
+                <img id="idNewImage" />
+              </p>
+              <p>
+                Width <input id="idImgWidth" style = "width:50px;" value ="100"/> px &nbsp;
+                Height <input id="idImgHeight" style = "width:50px;" value="100" /> px
+              </p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <div>
+                <button type="button" class="btn btn-danger" onclick="UpdateImage()">Save changes</button>
+              </div>
+              <div>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
           <div class="toast-header">
@@ -370,6 +402,72 @@
           document.getElementById('IdContent').appendChild(divContent);
 
           HideProduct();
+
+          DetectElementImage(idItem);
+        }
+
+        /* 
+        Check semua element. Jika jenis element-nya image, 
+        maka aktifkan event ChangeImage 
+        */
+        function DetectElementImage(idItem) {
+          var container = document.getElementById('IdContent');
+
+          var images = container.querySelectorAll('img');
+          for(var i = 0; i < images.length; i++) {
+            if(images[i].classList.contains("GW_image") == false) {
+              images[i].className ="GW_image";
+              var idImg = "IdImg-"+idItem+"-"+i;
+              images[i].id = idImg
+              images[i].addEventListener('click', ChangeImage.bind(event, idImg));
+            }  
+          }
+        }
+
+        /* Tampilkan modal change image */
+        function ChangeImage(idImg) {
+          let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalChangeImage'));
+          document.getElementById('idImage').value = idImg;
+
+          var canvas = document.createElement("canvas");
+          canvas.width = 300;
+          canvas.height = 300;
+          var ctx = canvas.getContext('2d');
+          ctx.font = "20px Arial";
+          var text = "Upload gambarnya bro!";
+          ctx.fillText(text,10,50);
+
+          var newImg = document.getElementById('idNewImage');
+          newImg.src = canvas.toDataURL();;
+          newImg.style.width = "100%";
+          newImg.style.height = "300px";
+          document.getElementById('idImgWidth').value = "100";
+          document.getElementById('idImgHeight').value = "100"
+          modal.show();
+        }
+
+        /* Convert Image to Base64*/
+        function encodeImageFile(element) {
+          let file = element.files[0];
+          let reader = new FileReader();
+          reader.onloadend = function() {
+            var newImg = document.getElementById('idNewImage');
+            newImg.src = reader.result;
+          }
+          reader.readAsDataURL(file);
+        }
+
+        /* Update Image */
+        function UpdateImage() {
+          let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalChangeImage')); 
+          var newImg = document.getElementById('idNewImage');
+          var idImg = document.getElementById('idImage').value;
+
+          var oldImg = document.getElementById(idImg);
+          oldImg.src = newImg.src;
+          oldImg.style.width = document.getElementById('idImgWidth').value+"px";
+          oldImg.style.height = document.getElementById('idImgHeight').value+"px";
+          modal.hide();
         }
 
         function ShowCode(idItem)

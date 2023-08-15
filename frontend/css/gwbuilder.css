@@ -238,7 +238,7 @@ body {
     width: 100%;
 }
 
-.GW_content_fill:hover section {
+.GW_content_fill :hover section {
     border: 1px solid rgb(240, 225, 225);
     border-radius: 1%;
     --tw-shadow: 10px 0px 40px rgba(92, 128, 162, 0.1);
@@ -295,4 +295,8 @@ body {
     top: 50%;
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+}
+
+.GW_image {
+   cursor: pointer;
 }
