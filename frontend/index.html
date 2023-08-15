@@ -227,23 +227,6 @@
           toastBootstrap.show();
         });
 
-        function ShowProduct(KategoriProduct)
-        {
-          /* Menampilkan element daftar product */
-          var product = document.getElementById("IdProduct");
-          product.style.display = "block";
-
-          /* Request daftar product ke backend */
-          sendRequest('get', 'elements/'+KategoriProduct.toLowerCase(), 'draw-elements', null);
-        }
-
-        function HideProduct()
-        {
-          /* Menyembunyikan element daftar product */
-          var product = document.getElementById("IdProduct");
-          product.style.display = "none";
-        }
-
         function ShowBlankContent() 
         {
           var divContainer = document.createElement("div");
@@ -289,6 +272,26 @@
           return divElement;
         }
 
+        /* Menampilkan form product + Request data product ke backend */
+        function ShowProduct(KategoriProduct)
+        {
+          /* Menampilkan element daftar product */
+          var product = document.getElementById("IdProduct");
+          product.style.display = "block";
+
+          /* Request daftar product ke backend parameter {method, url, jobs, data} */
+          sendRequest('get', 'elements/'+KategoriProduct.toLowerCase(), 'draw-elements', null);
+        }
+
+        /* Menyembunyikan form menu product */
+        function HideProduct()
+        {
+          /* Menyembunyikan element daftar product */
+          var product = document.getElementById("IdProduct");
+          product.style.display = "none";
+        }
+
+        /* Menampilkan daftar product ke menu */
         function DrawElements(response)
         {
           /* Mengosongkan daftar Product Element */
@@ -339,6 +342,7 @@
           }
         }
 
+        /* Menampilkan product yg dipilih ke canvas element */
         function AddElement(idItem)
         {
           /*Membuat element DIV untuk menampung element HTML */
@@ -406,19 +410,17 @@
           DetectElementImage(idItem);
         }
 
-        /* 
-        Check semua element. Jika jenis element-nya image, 
-        maka aktifkan event ChangeImage 
-        */
+        /* Check semua element. Jika jenis element-nya image, maka aktifkan event ChangeImage */
         function DetectElementImage(idItem) {
           var container = document.getElementById('IdContent');
 
           var images = container.querySelectorAll('img');
           for(var i = 0; i < images.length; i++) {
-            if(images[i].classList.contains("GW_image") == false) {
-              images[i].className ="GW_image";
-              var idImg = "IdImg-"+idItem+"-"+i;
-              images[i].id = idImg
+            var idImg = "IdImg-"+idItem+"-"+i;
+            var tempImg = document.getElementById(idImg); 
+            if(tempImg == null) {
+              images[i].style.cursor = "pointer";
+              images[i].id = idImg;
               images[i].addEventListener('click', ChangeImage.bind(event, idImg));
             }  
           }
@@ -489,7 +491,18 @@
           document.getElementById('IdFillElement-'+idTarget).innerHTML = newCode;
           modal.hide();
         }
-                
+
+        function CopyToCliboard()
+        {
+          /* Men-copy tag HTML di content ke clipboard */
+          let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalCode'));
+          var copyCode = document.getElementById('idCodeHTML').value;
+          var idTarget = document.getElementById('idElementCode').value;
+
+          navigator.clipboard.writeText(copyCode);
+          modal.hide();
+        }
+
         function RemoveElement(idItem)
         {
           /* Menghapus Element di Content */
@@ -515,17 +528,6 @@
           }
           document.getElementById('IdRequestElement').value = ele_selected;
 
-        }
-
-        function CopyToCliboard()
-        {
-          /* Men-copy tag HTML di content ke clipboard */
-          let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalCode'));
-          var copyCode = document.getElementById('idCodeHTML').value;
-          var idTarget = document.getElementById('idElementCode').value;
-
-          navigator.clipboard.writeText(copyCode);
-          modal.hide();
         }
 
         function DownloadPage(){
