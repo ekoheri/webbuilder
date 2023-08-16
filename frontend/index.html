@@ -569,7 +569,7 @@
                 section.innerHTML = document.getElementById('IdFillElement-'+dataJson[i]['elemen']).innerHTML;
                 images = section.querySelectorAll('img');
                 for(var j = 0; j < images.length; j++) {
-                  images[j].style.removeProperty("cursor");
+                  images[j].style.cursor = "auto";
                 }
                 docHtml.body.appendChild(section);
               }
