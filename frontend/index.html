@@ -3,11 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta name="description" content="Raih kemudahan dalam membangun website impian anda dengan Web Builder inovatif kami. Tanpa perlu pengetahuan teknis, Anda dapat membuat website yang menarik dengan cepat. Jelajahi fitur-fitur kreatif kami sekarang.">
     <meta name="keywords" content="web builder, web builder adalah, web builder gratis, web builder free, web builder ai, web build pc, web builder terbaik, web builder indonesia, web building">
     <title>Web Builder - Gadawangi</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <link href="css/gwbuilder.css" rel="stylesheet">
+    <link href="https://webbuilder.gadawangi.com/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://webbuilder.gadawangi.com/css/gwbuilder.css" rel="stylesheet">
   </head>
   <body>
     <section>
@@ -157,8 +158,8 @@
         </div>
       </div>
     </section>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="https://webbuilder.gadawangi.com/js/popper.min.js"></script>
+    <script src="https://webbuilder.gadawangi.com/js/bootstrap.bundle.min.js"></script>
     <script lang="javascript">
         /* AJAX */
         function createRequestObject() {
@@ -496,16 +497,15 @@
         {
           /* Men-copy tag HTML di content ke clipboard */
           let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalCode'));
-          var copyCode = document.getElementById('idCodeHTML').value;
-          //var idTarget = document.getElementById('idElementCode').value;
-          if (window.isSecureContext && navigator.clipboard) {
-            navigator.clipboard.writeText(copyCode);
-          } else {
+          var copyCode = document.getElementById('idCodeHTML');
+
+          try {
+            navigator.clipboard.writeText(copyCode.value);
+          } catch(err) {
             copyCode.focus();
             copyCode.select();
             document.execCommand('copy');
-          }
-          
+          }         
           modal.hide();
         }
 
