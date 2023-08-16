@@ -497,9 +497,15 @@
           /* Men-copy tag HTML di content ke clipboard */
           let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalCode'));
           var copyCode = document.getElementById('idCodeHTML').value;
-          var idTarget = document.getElementById('idElementCode').value;
-
-          navigator.clipboard.writeText(copyCode);
+          //var idTarget = document.getElementById('idElementCode').value;
+          if (window.isSecureContext && navigator.clipboard) {
+            navigator.clipboard.writeText(copyCode);
+          } else {
+            copyCode.focus();
+            copyCode.select();
+            document.execCommand('copy');
+          }
+          
           modal.hide();
         }
 
@@ -557,10 +563,14 @@
 
               /*Generate page HTML bagian body */
               var dataJson = JSON.parse(data);
-              for(i = 0; i < dataJson.length; i++){
+              for(var i = 0; i < dataJson.length; i++){
                 var section = document.createElement("section");
                 section.id = dataJson[i]['elemen'];
                 section.innerHTML = document.getElementById('IdFillElement-'+dataJson[i]['elemen']).innerHTML;
+                images = section.querySelectorAll('img');
+                for(var j = 0; j < images.length; j++) {
+                  images[j].style.removeProperty("cursor");
+                }
                 docHtml.body.appendChild(section);
               }
 
