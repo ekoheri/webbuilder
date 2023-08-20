@@ -11,6 +11,11 @@ class index {
     function run(){
         $this->cors();
         $this->routing();
+        
+        require 'core/singleton.php';
+        require 'core/registry.php';
+        require 'core/constant.php';
+
         if(!file_exists('controller/'.$this->controller.'.php'))
             die('File Controller Tidak Ditemukan !');
 
@@ -18,6 +23,8 @@ class index {
         $obj = new $this->controller;
         if(!method_exists($obj, $this->method))
             die('Method tidak ditemukan !');
+        
+        define('METHOD_ACTIVE', $this->method);
 
         call_user_func_array(
             array($obj, $this->method),
@@ -31,16 +38,14 @@ class index {
         $path = trim($path, '/');
         if($path == '')
             return;
-        //echo $path;
-        //echo '<br />';
+
         $segmen = explode('/', $path);
-        //print_r($segmen);
         $this->controller = $segmen[0];
         if(sizeof($segmen) > 1)
             $this->method = $segmen[1];
         $this->parameter = array_slice($segmen, 2);
-        //print_r($parameter);
     }
+    
     function cors() {
     
         // Allow from any origin

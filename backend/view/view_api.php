@@ -11,15 +11,15 @@
                 <div class="card-body">
                     <h5>Get API Key</h5>
                     <p>Untuk bisa mengakses API yang ada disini, anda harus memasang TOKEN API pada header aplikasi frontend anda!</p>
-                    <p>Untuk mendapatkan Token API, anda harus login ke halaman admin <a href="<?php echo $baseurl ?>/index.php/admin">Login Admin</a></p>
+                    <p>Untuk mendapatkan Token API, anda harus login ke halaman admin <a href="<?php echo BASE_URL ?>/index.php/admin">Login Admin</a></p>
                     <hr />
                     <h5>Daftar Spec API</h5>
                     <p>Setelah anda mendapatkan TOKEN API, silahkan akses URL berikut ini</p>
                     <ol>
                         <?php foreach($list_element as $key => $value) { ?>
                         <li>Method : GET, Elements : <?php echo $key ?>, URL :
-                            <a href="<?php echo $baseurl.'/index.php/api/elements/'.$key ?>">
-                                <?php echo $baseurl.'/index.php/api/elements/'.$key  ?>
+                            <a href="<?php echo BASE_URL.'/index.php/api/elements/'.$key ?>">
+                                <?php echo BASE_URL.'/index.php/api/elements/'.$key  ?>
                             </a>
                         </li>
                         <?php }?>

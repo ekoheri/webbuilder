@@ -7,10 +7,10 @@
     <div class="container">
         <div class="row justify-content-center py-5">
             <div class="col-md-8 col-lg-8 col-xl-6">
-                <form method="post" action="<?php echo $baseurl?>submitlogin">
+                <form method="post" action="<?php echo BASE_URL?>/index.php/admin/submitlogin">
                     <h1 class="h3 mb-3 fw-normal text-center">Silahkan Login</h1>
                     <div class="form-floating">
-                        <input type="text" name="username" class="form-control" id="floatingInput" />
+                        <input type="email" name="username" class="form-control" id="floatingInput" />
                         <label for="floatingInput">Email</label>
                     </div>
                     <div class="form-floating">
