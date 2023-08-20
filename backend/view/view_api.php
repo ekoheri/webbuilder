@@ -18,12 +18,24 @@
                     <ol>
                         <?php foreach($list_element as $key => $value) { ?>
                         <li>Method : GET, Elements : <?php echo $key ?>, URL :
-                            <a href="<?php echo BASE_URL.'/index.php/api/elements/'.$key ?>">
-                                <?php echo BASE_URL.'/index.php/api/elements/'.$key  ?>
+                            <a href="<?php echo BASE_URL.'/index.php/api/elements/'.$key.'/1' ?>">
+                                <?php echo BASE_URL.'/index.php/api/elements/'.$key.'/1'  ?>
                             </a>
                         </li>
                         <?php }?>
                     </ol>
+                    <p>Contoh Output</p>
+                    <code>
+                        { <br /> 
+                            &nbsp;&nbsp;&nbsp;"element_name" : "navbar", <br />
+                            &nbsp;&nbsp;&nbsp;"page" : 1,<br />
+                            &nbsp;&nbsp;&nbsp;"total_pages" : 5,<br />
+                            &nbsp;&nbsp;&nbsp;"data" : [<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"id" : "navbar-1", "image" : "data:image/jpeg;base64;..", "html" : "&lt;nav&gt;...&lt;/nav&gt;"},<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"id" : "navbar-2", "image" : "data:image/jpeg;base64;..", "html" : "&lt;nav&gt;...&lt;/nav&gt;"}<br />
+                            &nbsp;&nbsp;&nbsp;]<br />
+                        }
+                    </code>
                     <hr />
                     <p class="text-center">&copy Eko Heri Susanto</p>
                 </div>

@@ -71,6 +71,7 @@ class api_model {
 
         // Get the subset of records to be displayed from the array
         $data = array(
+            'element_name' => $element_name,
             'page' => $page,
             'total_pages' => $total_pages,
             'data' => array_slice($json_arr[$element_name], $offset, $page_size) 

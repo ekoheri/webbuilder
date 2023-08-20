@@ -31,7 +31,6 @@ class api extends singleton {
             echo "<h1>401 : Access denied, because API key is unknown</h1>";
             exit;
         }
-
         echo $this->api_model->get_single_element($parameter, $page);
     }
 }
