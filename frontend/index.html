@@ -125,7 +125,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <p><input hidden id = "idImage" type="text" /></p>
+              <p><input id = "idImage" type="text" /></p>
               <p>
                   <input type="file" onchange="encodeImageFile(this)" />
               </p>
@@ -140,6 +140,31 @@
             <div class="modal-footer justify-content-between">
               <div>
                 <button type="button" class="btn btn-danger" onclick="UpdateImage()">Save changes</button>
+              </div>
+              <div>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="idModalChangeHTML" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Change Script HTML</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>
+                <input id = "idElementHTML" type="text" />
+                <textarea id = "idScriptHTML" class="form-control" style=" min-width:400px; max-width:100%;min-height:400px;height:100%;width:100%;" ></textarea>
+              </p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <div>
+                <button type="button" class="btn btn-danger" onclick="UpdateScriptHTML()">Save changes</button>
               </div>
               <div>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -215,7 +240,7 @@
           if(http.readyState == 4 && http.status == 200){
               var response = http.responseText;
               
-              parsingData(response);
+              parsingDataElement(response);
           }
         }
 
@@ -238,7 +263,7 @@
         var total_pages = 0;
         var element_name = '';
 
-        function parsingData(response) {
+        function parsingDataElement(response) {
           /* Mengkonversi String ke array JSON */
           var dataJson = JSON.parse(response);
           
@@ -468,25 +493,28 @@
 
           HideProduct();
 
-          DetectElementImage(idItem);
+          DetectEditableObject()
         }
 
-        /* Check semua element. Jika jenis element-nya image, maka aktifkan event ChangeImage */
-        function DetectElementImage(idItem) {
+        /* Cek semua element yang mengandung class GW_Editable */
+        function DetectEditableObject() {
           var container = document.getElementById('IdContent');
-
-          var images = container.querySelectorAll('img');
-          for(var i = 0; i < images.length; i++) {
-            var idImg = "IdImg-"+idItem+"-"+i;
-            var tempImg = document.getElementById(idImg); 
-            if(tempImg == null) {
-              images[i].style.cursor = "pointer";
-              images[i].id = idImg;
-              images[i].addEventListener('click', ChangeImage.bind(event, idImg));
-            }  
+          var obj = container.getElementsByClassName('GW_Editable');
+          for(var i = 0; i < obj.length; i++) {
+            //console.log(obj[i].tagName.toLowerCase());
+            var tagObj = obj[i].tagName.toLowerCase();
+            var tagId = 'Id-'+tagObj+'-'+i;
+            if(obj[i].id == '') {
+              obj[i].id = tagId;
+              if(tagObj == 'img') {
+                obj[i].addEventListener('click', ChangeImage.bind(event, tagId));
+              } else {
+                obj[i].addEventListener('click', ChangeHTML.bind(event, tagId));
+              }
+            }
           }
         }
-
+        
         /* Tampilkan modal change image */
         function ChangeImage(idImg) {
           let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalChangeImage'));
@@ -509,6 +537,14 @@
           modal.show();
         }
 
+        /* Tampilkan modal change Script HTML */
+        function ChangeHTML(idElementHtml) {
+          let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalChangeHTML'));
+          document.getElementById('idElementHTML').value = idElementHtml;
+          document.getElementById('idScriptHTML').value = '';
+          document.getElementById('idScriptHTML').value = document.getElementById(idElementHtml).innerHTML
+          modal.show();
+        }
         /* Convert Image to Base64*/
         function encodeImageFile(element) {
           let file = element.files[0];
@@ -530,6 +566,15 @@
           oldImg.src = newImg.src;
           oldImg.style.width = document.getElementById('idImgWidth').value+"px";
           oldImg.style.height = document.getElementById('idImgHeight').value+"px";
+          modal.hide();
+        }
+
+        /* Update Script HTML */
+        function UpdateScriptHTML() {
+          let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalChangeHTML'));
+          var IdTarget = document.getElementById('idElementHTML').value;
+          var newScript = document.getElementById('idScriptHTML').value;
+          document.getElementById(IdTarget).innerHTML = newScript;
           modal.hide();
         }
 
