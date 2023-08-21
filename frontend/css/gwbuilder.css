@@ -148,6 +148,13 @@ body {
     right: 10px;
 }
 
+.GW_products_footer {
+    text-align:center;
+}
+
+.GW_products_footer button {
+    border-radius: 10%;
+}
 /* Content */
 
 .GW_content {

@@ -8,7 +8,7 @@
     <meta name="keywords" content="web builder, web builder adalah, web builder gratis, web builder free, web builder ai, web build pc, web builder terbaik, web builder indonesia, web building">
     <title>Web Builder - Gadawangi</title>
     <link href="https://webbuilder.gadawangi.com/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://webbuilder.gadawangi.com/css/gwbuilder.css" rel="stylesheet">
+    <link href="http://localhost:5500/css/gwbuilder.css" rel="stylesheet">
   </head>
   <body>
     <section>
@@ -71,11 +71,16 @@
         </div> <!-- navigation sidebar -->
 
         <div class="GW_products" id="IdProduct">
+          <div id="idElementName" style="position: absolute;top:15px;"></div>
           <button onclick ="HideProduct()" class="btn btn-danger" style="position: absolute;top:8px;right: 10px;">
               <span>X</span>
           </button>
           <div class="GW_productsItem" id="idProductItem">
             <!-- tempat render product item-->
+          </div>
+          <div class="GW_products_footer">
+            <button id="idBtnPrev" onclick ="ShowProductPrev()" class="btn btn-info">&laquo; Prev</button>
+            <button id="idBtnNext" onclick ="ShowProductNext()" class="btn btn-info">Next &raquo;</button>
           </div>
         </div> <!-- Product Menu Item-->
 
@@ -178,9 +183,9 @@
 
         /* Sesuaikan alamat URL ini dengan alamat URL backend */
         var url_api = 'http://localhost:8080/index.php/api/';
-        var api_key = 'cae549f86ecf80d75e17541f360913c1';
+        var api_key = 'e06d73e710644d3462298c53f95c545a';
 
-        function sendRequest(method, url_target, jobs, data) {
+        function sendRequest(method, url_target, data) {
             /* Open : membuka koneksi ke backend */
             http.open(method, url_api+url_target);
             /* setRequestHeader : konfigurasi request header */
@@ -195,21 +200,22 @@
               Disini ditampilan gambar loading 
             */
             http.onloadstart = function() {
+              document.getElementById('idProductItem').innerHTML == '';
               document.getElementById('idProductItem').appendChild(ShowLoading());
             }
 
             /* onloadstart : event ketika selesai memuat data dari backend */
             http.onload = function(){
-                handleResponse(jobs);
+                handleResponse();
             }
         }
 
-        function handleResponse(jobs) {
+        function handleResponse() {
           /* Menangani response dari backend */
           if(http.readyState == 4 && http.status == 200){
               var response = http.responseText;
-              if(jobs == 'draw-elements')
-                DrawElements(response);
+              
+              parsingData(response);
           }
         }
 
@@ -227,6 +233,42 @@
           const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
           toastBootstrap.show();
         });
+
+        var current_page = 1;
+        var total_pages = 0;
+        var element_name = '';
+
+        function parsingData(response) {
+          /* Mengkonversi String ke array JSON */
+          var dataJson = JSON.parse(response);
+          
+          current_page = parseInt(dataJson.page);
+          total_pages = parseInt(dataJson.total_pages);
+          var dataElement = dataJson.data;
+          
+          var btnPrev = document.getElementById('idBtnPrev');
+          var btnNext = document.getElementById('idBtnNext');
+
+          // Validate page
+          if(total_pages == 0) total_pages = 1;
+          if (current_page < 1) current_page = 1;
+          if (current_page > total_pages) current_page = total_pages;
+          
+          if(current_page == 1) {
+            btnPrev.style.visibility = 'hidden';
+          } else {
+            btnPrev.style.visibility = 'visible';
+          }
+
+          if (current_page == total_pages) {
+            btnNext.style.visibility = "hidden";
+          } else {
+            btnNext.style.visibility = "visible";
+          }
+            
+          DrawElements(dataElement);
+        }
+
 
         function ShowBlankContent() 
         {
@@ -277,30 +319,48 @@
         function ShowProduct(KategoriProduct)
         {
           /* Menampilkan element daftar product */
-          var product = document.getElementById("IdProduct");
-          product.style.display = "block";
+          var ElementName = document.getElementById('idElementName');
+          ElementName.innerHTML = KategoriProduct;
+
+          var product = document.getElementById('IdProduct');
+          if((product.style.display =="") || (product.style.display =="none"))
+            product.style.display = "block";
 
           /* Request daftar product ke backend parameter {method, url, jobs, data} */
-          sendRequest('get', 'elements/'+KategoriProduct.toLowerCase(), 'draw-elements', null);
+          sendRequest('get', 'elements/'+KategoriProduct.toLowerCase()+'/'+current_page, null);
         }
 
+        function ShowProductPrev() {
+          if(current_page > 1) {
+            current_page--;
+            var ElementName = document.getElementById('idElementName');
+            ShowProduct(ElementName.innerHTML);
+          }
+        }
+
+        function ShowProductNext() {
+          if(current_page < total_pages) {
+            current_page++;
+            var ElementName = document.getElementById('idElementName');
+            ShowProduct(ElementName.innerHTML);
+          }
+        }
         /* Menyembunyikan form menu product */
         function HideProduct()
         {
           /* Menyembunyikan element daftar product */
           var product = document.getElementById("IdProduct");
           product.style.display = "none";
+          current_page = 1;
         }
 
         /* Menampilkan daftar product ke menu */
-        function DrawElements(response)
+        function DrawElements(dataElement)
         {
           /* Mengosongkan daftar Product Element */
           document.getElementById('idProductItem').innerHTML = "";
 
-          /* Mengkonversi String ke array JSON */
-          var dataJson = JSON.parse(response);
-          for(i = 0; i < dataJson.length; i++){
+          for(i = 0; i < dataElement.length; i++){
             /* 
               Membuat element DIV product item. Isi dari divItem adalah :
                a. Gambar product yg dikirim dari backend
@@ -312,13 +372,13 @@
 
             /* Menampilkan gambar product item */
             var imgItem = document.createElement("img");
-            imgItem.src = dataJson[i]['image'];
+            imgItem.src = dataElement[i]['image'];
             divItem.appendChild(imgItem);
 
             /* Menampilkan hyperlink TAMBAH dari daftar product ke Content */
             var aItem = document.createElement("a");
             aItem.href = "#";
-            aItem.addEventListener("click", AddElement.bind(event, dataJson[i]['id']));
+            aItem.addEventListener("click", AddElement.bind(event, dataElement[i]['id']));
 
             /* Menampilkan icon + SVG */
             var svgItem = '<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">';
@@ -333,9 +393,9 @@
 
             /* Menampung element HTML dari backend ke div. Hanya div ini di-sebunyikan (hidden) */
             var divHtml = document.createElement("div");
-            divHtml.id = "IdProductItem-"+dataJson[i]['id'];
+            divHtml.id = "IdProductItem-"+dataElement[i]['id'];
             divHtml.hidden = true;
-            divHtml.innerHTML = StringToHTML(dataJson[i]['html']);
+            divHtml.innerHTML = StringToHTML(dataElement[i]['html']);
             divItem.appendChild(divHtml);
 
             /* Menambahkan divItem menjadi anaknya divProduct */
@@ -593,25 +653,6 @@
               link.click();
             }
         }
-
-        /*
-        *****************************
-        Fungsi ini digunakan untuk mendownload HTML dari backend.
-        Hanya sajafungsi ini sudah tidak digunakan lagi.
-        Karena untuk fungsi download, langsung mengambil dari content. 
-        Tidak men-download dari backend lagi
-
-        Fungsi ini tidak dihapus, karena disini ada contoh penggunaan metode POST.
-        *****************************
-        function PostDownload()
-        {
-          var data = document.getElementById('IdRequestElement').value;
-          if(data == '')
-            alert("Tidak ada element HTML yang dipilih!");
-          else
-            sendRequest('post', 'download', 'download-page', data);
-        }
-        */
 
         /* Helper */
         function StringToHTML(str)
