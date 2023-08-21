@@ -1,3 +1,11 @@
+/* 
+Konfigurasi :
+1. Sesuaikan alamat URL (url_api) ini dengan alamat URL backend 
+2. Sesuaikan api_key ini dengan API key yang ada di backend 
+*/
+var url_api = 'http://localhost:8080/index.php/api/';
+var api_key = 'e06d73e710644d3462298c53f95c545a';
+
 /* AJAX */
 function createRequestObject() {
     /* Inisiasi fungsi API bawaan dari browser yaitu XMLHttpRequest */
@@ -12,10 +20,6 @@ function createRequestObject() {
 }
 
 var http = createRequestObject();
-
-/* Sesuaikan alamat URL ini dengan alamat URL backend */
-var url_api = 'http://localhost:8080/index.php/api/';
-var api_key = 'e06d73e710644d3462298c53f95c545a';
 
 function sendRequest(method, url_target, data) {
     /* Open : membuka koneksi ke backend */
