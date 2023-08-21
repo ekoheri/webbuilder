@@ -17,11 +17,7 @@ class api extends singleton {
     {
         $api_key =  $this->api_model->get_api_key();
         $header = getallheaders();
-        if(($header['Host'] !== 'localhost:8080') AND ($header['Host'] !== 'webbuilder.gadawangi.com:443')) {
-            http_response_code(401);
-            echo "<h1>401 : Access denied, because the host is unknown</h1>";
-            exit;
-        }
+
         if(!isset($header['api-key'])) {
             http_response_code(401);
             echo "<h1>401 : Access denied, because API key is empty</h1>";
@@ -31,6 +27,7 @@ class api extends singleton {
             echo "<h1>401 : Access denied, because API key is unknown</h1>";
             exit;
         }
+        
         echo $this->api_model->get_single_element($parameter, $page);
     }
 }
