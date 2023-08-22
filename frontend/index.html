@@ -19,15 +19,14 @@
             <span>Web Builder</span>
           </a>
           <div class="d-flex" role="search">
-            <input hidden id ="IdRequestElement" class="form-control me-2" />
-            <button class="btn btn-danger" onclick="DownloadPage()">Download</button>
+            <button id="btnDownload" class="btn btn-danger">Download</button>
           </div>
         </div>
       </nav>
     </section>
     <section class="py-9 px-10 flex items-start w-full justify-end">
         <div class="GW_sidebar">
-          <div onclick ="ShowProduct('navbar')" class="GW_sidebar_item" style="padding-right: 0px;"
+          <div id = "btnSidebarItemNavbar" class="GW_sidebar_item" style="padding-right: 0px;"
             data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Element Navigation bar">
             <div class="flex w-full h-full items-center" style="padding-right: 20px;">
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="24px" height="24px" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -35,7 +34,7 @@
                 </svg>
             </div>
           </div>
-          <div onclick ="ShowProduct('header')"  class="GW_sidebar_item" style="padding-right: 0px;"
+          <div id = "btnSidebarItemHeader"  class="GW_sidebar_item" style="padding-right: 0px;"
             data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Element Header">
             <div class="flex w-full h-full items-center" style="padding-right: 20px;">
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="24px" height="24px" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -43,7 +42,7 @@
                 </svg>
             </div>
           </div>
-          <div onclick ="ShowProduct('content')"  class="GW_sidebar_item" style="padding-right: 0px;"
+          <div id = "btnSidebarItemContent" class="GW_sidebar_item" style="padding-right: 0px;"
             data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Element Content">
             <div class="flex w-full h-full items-center" style="padding-right: 20px;">
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="24px" height="24px" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -51,7 +50,7 @@
                 </svg>
             </div>
           </div>
-          <div onclick ="ShowProduct('footer')" class="GW_sidebar_item" style="padding-right: 0px;"
+          <div id = "btnSidebarItemFooter" class="GW_sidebar_item" style="padding-right: 0px;"
             data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Element Footer">
             <div class="flex w-full h-full items-center" style="padding-right: 20px;">
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="24px" height="24px" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -59,7 +58,7 @@
                 </svg>
             </div>
           </div>
-          <div onclick ="ShowProduct('page')"  class="GW_sidebar_item" style="padding-right: 0px;"
+          <div id = "btnSidebarItemPage" class="GW_sidebar_item" style="padding-right: 0px;"
             data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Page Tamplate">
             <div class="flex w-full h-full items-center" style="padding-right: 20px;">
               <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="24px" height="24px" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -70,44 +69,43 @@
           </div>
         </div> <!-- navigation sidebar -->
 
-        <div class="GW_products" id="IdProduct">
-          <div id="idElementName" style="position: absolute;top:15px;"></div>
-          <button onclick ="HideProduct()" class="btn btn-danger" style="position: absolute;top:8px;right: 10px;">
+        <div class="GW_products" id="divProductMenu">
+          <div id="divElementSelected" style="position: absolute;top:15px;"></div>
+          <button id = "btnCloseProductMenu" class="btn btn-danger" style="position: absolute;top:8px;right: 10px;">
               <span>X</span>
           </button>
 
             <!-- DIV id="idProductItem" adalah tempat menampilkan product item-->
-          <div class="GW_productsItem" id="idProductItem"></div>
+          <div class="GW_productsItem" id="divDisplayProductItem"></div>
           <div class="GW_products_footer">
-            <button id="idBtnPrev" onclick ="ShowProductPrev()" class="btn btn-info">&laquo; Prev</button>
-            <button id="idBtnNext" onclick ="ShowProductNext()" class="btn btn-info">Next &raquo;</button>
+            <button id="btnPgntPrev" class="btn btn-info">&laquo; Prev</button>
+            <button id="btnPgntNext" class="btn btn-info">Next &raquo;</button>
           </div>
         </div> <!-- Product Menu Item-->
 
         <div class="GW_content" style="min-height: auto;">
-          <!-- div id='IdContent' adalah tempat untuk menampilkan element HTML-->
-          <div class="GW_Content_Canvas d-flex flex-column" id="IdContent"></div>
+          <!-- div id='divContentCanvas' adalah tempat untuk menampilkan element HTML-->
+          <div class="GW_Content_Canvas d-flex flex-column" id="divContentCanvas"></div>
           </div> <!-- GW_Content_Canvas -->
         </div> <!-- Content -->
     </section>
     <section>
-      <div id="idModalCode" class="modal" tabindex="-1">
-        <div class="modal-dialog">
+      <div id="ModalCodeHTML" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticModalCodeLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Script HTML</h5>
+              <h5 class="modal-title" id="staticModalCodeLabel">Script HTML</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <p>
-                <input hidden id = "idElementCode" type="text" />
-                <textarea id = "idCodeHTML" class="form-control" style=" min-width:400px; max-width:100%;min-height:400px;height:100%;width:100%;" ></textarea>
+                <textarea id = "txtCodeHTML" class="form-control" style=" min-width:400px; max-width:100%;min-height:400px;height:100%;width:100%;" ></textarea>
               </p>
             </div>
             <div class="modal-footer justify-content-between">
               <div>
-                <button type="button" class="btn btn-primary" onclick="CopyToCliboard()">Copy</button>
-                <button type="button" class="btn btn-danger" onclick="UpdateCode()">Save changes</button>
+                <button id ="btnCopyToCliboard" type="button" class="btn btn-primary">Copy</button>
+                <button id ="btnUpdateCodeHTML" type="button" class="btn btn-danger">Save changes</button>
               </div>
               <div>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -117,29 +115,29 @@
         </div>
       </div>
 
-      <div id="idModalChangeImage" class="modal" tabindex="-1">
-        <div class="modal-dialog">
+      <div id="ModalChangeImage" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticModalChangeImageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Change Image</h5>
+              <h5 class="modal-title" id = "staticModalChangeImageLabel">Change Image</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <p><input hidden id = "idImage" type="text" /></p>
               <p>
-                  <input type="file" onchange="encodeImageFile(this)" />
+                  <input id = "inpFileImage" type="file" />
               </p>
               <p>
-                <img id="idNewImage" />
+                <img id="imgNewPicture" />
               </p>
               <p>
-                Width <input id="idImgWidth" style = "width:50px;" value ="100"/> px &nbsp;
-                Height <input id="idImgHeight" style = "width:50px;" value="100" /> px
+                Width <input id="inpImageWidth" style = "width:50px;" value ="100"/> px &nbsp;
+                Height <input id="inpImageHeight" style = "width:50px;" value="100" /> px
               </p>
             </div>
             <div class="modal-footer justify-content-between">
               <div>
-                <button type="button" class="btn btn-danger" onclick="UpdateImage()">Save changes</button>
+                <button id="btnUpdateImage" type="button" class="btn btn-danger">Save changes</button>
               </div>
               <div>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -190,6 +188,6 @@
     </section>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/GW_Script.js"></script>
+    <script src="js/GW_script.js"></script>
   </body>
 </html>
