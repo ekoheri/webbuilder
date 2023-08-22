@@ -106,21 +106,22 @@ HandleUI = function () {
     this.IdElementContainer = "IdElementContainer-";
     this.IdFillElement = "IdFillElement-";
 
-    //property untuk bagian  Modal CodeHTML
+    //property untuk bagian  Modal Update Element
     this.IdElementSelected = '';
-    this.ModalCodeHTML = document.getElementById('ModalCodeHTML');
-    this.txtCodeHTML = document.getElementById('txtCodeHTML');
-    this.btnCopyToCliboard = document.getElementById('btnCopyToCliboard');
-    this.btnUpdateCodeHTML = document.getElementById('btnUpdateCodeHTML');
-
-    //property untuk bagian Modal Change Image
     this.IdImageSelected = '';
-    this.ModalChangeImage = document.getElementById('ModalChangeImage');
+
+    this.ModalUpdateElement = document.getElementById('ModalUpdateElement');
+    this.divUpdateCodeHTML = document.getElementById('divUpdateCodeHTML');
+    this.divUpdateImage = document.getElementById('divUpdateImage');
+
+    this.txtCodeHTML = document.getElementById('txtCodeHTML');
     this.inpFileImage = document.getElementById('inpFileImage');
     this.imgNewPicture = document.getElementById('imgNewPicture');
     this.inpImageWidth = document.getElementById('inpImageWidth');
     this.inpImageHeight = document.getElementById('inpImageHeight');
-    this.btnUpdateImage = document.getElementById('btnUpdateImage');
+
+    this.btnCopyToCliboard = document.getElementById('btnCopyToCliboard');
+    this.btnUpdateElement = document.getElementById('btnUpdateElement');
 
     // Method init
     this.init = function() {
@@ -174,12 +175,8 @@ HandleUI = function () {
             this.CopyToCliboard();
         }.bind(this));
 
-        this.btnUpdateCodeHTML.addEventListener('click', function() {
-            this.UpdateCodeHTML();
-        }.bind(this));
-
-        this.btnUpdateImage.addEventListener('click', function() {
-            this.UpdateImage()
+        this.btnUpdateElement.addEventListener('click', function() {
+            this.UpdateElement();
         }.bind(this));
     } //end method init
 
@@ -366,9 +363,9 @@ HandleUI = function () {
         var aCode = document.createElement('a');
         aCode.href = '#';
         aCode.setAttribute("data-toggle", "modal");
-        aCode.setAttribute("data-target", "#ModalCodeHTML");
+        aCode.setAttribute("data-target", "#ModalUpdateElement");
         aCode.addEventListener("click", function () {
-            this.ShowModalCode(idItem,'element');
+            this.ShowModal(idItem,'element-copy');
         }.bind(this));
 
         var svgACode = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="48px" height="48px" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">';
@@ -511,27 +508,43 @@ HandleUI = function () {
     }
 
     /* Method untuk menampilkan Kode Script HTML element yg dipilih user */
-    this.ShowModalCode = function(idItem, HtmlType) {
-        let modal = bootstrap.Modal.getOrCreateInstance(this.ModalCodeHTML);
+    this.ShowModal = function(idItem, HtmlType) {
+        let modal = bootstrap.Modal.getOrCreateInstance(this.ModalUpdateElement);
         // Jika yang ditampilkan adalah script element utuh, maka yg diijinkan hanya meng-copy saja
-        if(HtmlType == 'element') {
+        if(HtmlType == 'element-copy') {
             this.IdElementSelected = this.IdFillElement + idItem;
-            this.btnCopyToCliboard.style.visibility = "visible";
-            this.btnUpdateCodeHTML.style.visibility = "hidden";
-        } else if(HtmlType = 'tag') {
+            this.IdImageSelected = '';
+            this.btnCopyToCliboard.hidden = false;
+            this.btnUpdateElement.hidden = true;
+            this.divUpdateCodeHTML.hidden = false;
+            this.divUpdateImage.hidden = true;
+            // Value TextArea Kode HTMl diambil dari isi HTML element yg dipilih
+            this.txtCodeHTML.value = document.getElementById(this.IdElementSelected).innerHTML;
+        } else if(HtmlType == 'tag-edit') {
             this.IdElementSelected = idItem;
-            this.btnCopyToCliboard.style.visibility = "hidden";
-            this.btnUpdateCodeHTML.style.visibility = "visible";
+            this.IdImageSelected = '';
+            this.btnCopyToCliboard.hidden = true;
+            this.btnUpdateElement.hidden = false;
+            this.divUpdateCodeHTML.hidden = false;
+            this.divUpdateImage.hidden = true;
+            // Value TextArea Kode HTMl diambil dari isi HTML element yg dipilih
+            this.txtCodeHTML.value = document.getElementById(this.IdElementSelected).innerHTML;
+        } else if(HtmlType == 'img-edit') {
+            this.IdElementSelected = '';
+            this.IdImageSelected = idItem;
+            this.btnCopyToCliboard.hidden = true;
+            this.btnUpdateElement.hidden = false;
+            this.divUpdateCodeHTML.hidden = true;
+            this.divUpdateImage.hidden = false;
+            this.txtCodeHTML.value = '';
+            this.ChangeImage(idItem);
         }
-
-        // Value TextArea Kode HTMl diambil dari isi HTML element yg dipilih
-        this.txtCodeHTML.value = document.getElementById(this.IdElementSelected).innerHTML;
         modal.show();
     }
 
     /* Method untuk meng-copy ke clipboard */
     this.CopyToCliboard = function() {
-        let modal = bootstrap.Modal.getOrCreateInstance(this.ModalCodeHTML);
+        let modal = bootstrap.Modal.getOrCreateInstance(this.ModalUpdateElement);
         try {
             navigator.clipboard.writeText(this.txtCodeHTML.value);
         } catch(err) {
@@ -539,13 +552,6 @@ HandleUI = function () {
             this.txtCodeHTML.select();
             document.execCommand('copy');
         }
-        modal.hide();
-    }
-
-    /* Method untuk Meng-update script HTML jika script-nya diubah oleh user */
-    this.UpdateCodeHTML = function() {
-        let modal = bootstrap.Modal.getOrCreateInstance(this.ModalCodeHTML);
-        document.getElementById(this.IdElementSelected).innerHTML = this.txtCodeHTML.value;
         modal.hide();
     }
 
@@ -572,11 +578,11 @@ HandleUI = function () {
             */
             if(tagObj == 'img') {
                 obj[i].addEventListener('click', function() {
-                    this.ChangeImage(tagId)
+                    this.ShowModal(tagId, 'img-edit')
                 }.bind(this));
             } else {
                 obj[i].addEventListener('click', function() {
-                    this.ShowModalCode(tagId, 'tag');
+                    this.ShowModal(tagId, 'tag-edit');
                 }.bind(this));
             }
         }
@@ -584,8 +590,6 @@ HandleUI = function () {
     
     /* Method untuk merubah gambar */
     this.ChangeImage = function(tagId) {
-        let modal = bootstrap.Modal.getOrCreateInstance(this.ModalChangeImage);
-
         // Membuat canvas untuk menggambar kalimat "Upload Gambar bro!"
         var canvas = document.createElement("canvas");
         canvas.width = 300;
@@ -609,18 +613,22 @@ HandleUI = function () {
             }
             reader.readAsDataURL(file);
         }.bind(this));
-        modal.show();
     }
 
-    /* Method untuk meng-update gambar */
-    this.UpdateImage = function() {
-        let modal = bootstrap.Modal.getOrCreateInstance(this.ModalChangeImage);
-        var oldImg = document.getElementById(this.ImageSelected);
+    /* Method untuk Meng-update script HTML atau gambar jika element-nya di-edit oleh user */
+    this.UpdateElement = function() {
+        let modal = bootstrap.Modal.getOrCreateInstance(this.ModalUpdateElement);
+        if(this.IdImageSelected != '') {
+            var oldImg = document.getElementById(this.ImageSelected);
 
-        /* Merubah gambar dari gambar lama ke gambar baru yg di-upload user */
-        oldImg.src = this.imgNewPicture.src;
-        oldImg.style.width = this.inpImageWidth.value+"px";
-        oldImg.style.height = this.inpImageHeight.value+"px";
+            /* Merubah gambar dari gambar lama ke gambar baru yg di-upload user */
+            oldImg.src = this.imgNewPicture.src;
+            oldImg.style.width = this.inpImageWidth.value+"px";
+            oldImg.style.height = this.inpImageHeight.value+"px";
+        }
+        else if(this.IdElementSelected != '') {
+            document.getElementById(this.IdElementSelected).innerHTML = this.txtCodeHTML.value;            
+        }
         modal.hide();
     }
 
