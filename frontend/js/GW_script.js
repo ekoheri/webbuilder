@@ -4,10 +4,10 @@ Fungsi Class : untuk melakukan komunikasi data denganbackend server
 */
 ajax = function() {
     /* Sesuaikan URL API dengan alamat backend */
-    this.url_api = 'http://localhost:8080/index.php/api/';
+    this.url_api = 'https://adminwb.gadawangi.com/index.php/api/';
 
     /* Sesuaikan API KEy dengan API Key yang terdaftar di backend */
-    this.api_key = 'e06d73e710644d3462298c53f95c545a';
+    this.api_key = 'adc31a54cbc7896b3f093c1d9cf29080';
     
     this.ContainerLoading = null;
 
@@ -15,6 +15,7 @@ ajax = function() {
         var url = this.url_api + url_target;
         var api_key = this.api_key;
         const ContainerLoading = this.ContainerLoading;
+        const ShowLoading = this.ShowLoading();
         return new Promise(function(resolve, reject){
             /* new instance dari object XMLHttpRequest */
             var http = new XMLHttpRequest();
@@ -26,15 +27,10 @@ ajax = function() {
             http.setRequestHeader("Cache-Control", "no-cache");
             http.setRequestHeader("api-key", api_key);
 
-            /* Kirim permintaan (request) data ke backend */
-            http.send(data);
-
             /* Event ketika memulai memuat data dari backend */
             http.onloadstart = function() {
-                if(ContainerLoading != null) {
-                    ContainerLoading.innerHTML = '';
-                    ContainerLoading.innerHTML.appendChild(ShowLoading());
-                }
+                ContainerLoading.innerHTML = '';
+                ContainerLoading.appendChild(ShowLoading);
             }
 
             /* Event ketika berhasil mendapatlan data dari backend */
@@ -47,6 +43,9 @@ ajax = function() {
             
             /* Event ketika gagal melakukan koneksi ke backend */
             http.onerror = reject;
+
+            /* Kirim permintaan (request) data ke backend */
+            http.send(data);
         });
     }
 
