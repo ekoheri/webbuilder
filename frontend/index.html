@@ -104,10 +104,10 @@
             </div>
             <div class="modal-footer justify-content-between">
               <div>
-                <button id ="btnCopyToCliboard" type="button" class="btn btn-primary">Copy</button>
                 <button id ="btnUpdateCodeHTML" type="button" class="btn btn-danger">Save changes</button>
               </div>
               <div>
+                <button id ="btnCopyToCliboard" type="button" class="btn btn-primary">Copy</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
@@ -131,38 +131,13 @@
                 <img id="imgNewPicture" />
               </p>
               <p>
-                Width <input id="inpImageWidth" style = "width:50px;" value ="100"/> px &nbsp;
-                Height <input id="inpImageHeight" style = "width:50px;" value="100" /> px
+                Size of Picture Width <input id="inpImageWidth" style = "width:50px;" value ="100"/> X 
+                Height <input id="inpImageHeight" style = "width:50px;" value="100" /> Pixel
               </p>
             </div>
             <div class="modal-footer justify-content-between">
               <div>
                 <button id="btnUpdateImage" type="button" class="btn btn-danger">Save changes</button>
-              </div>
-              <div>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="idModalChangeHTML" class="modal" tabindex="-1">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Change Script HTML</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <p>
-                <input hidden id = "idElementHTML" type="text" />
-                <textarea id = "idScriptHTML" class="form-control" style=" min-width:400px; max-width:100%;min-height:400px;height:100%;width:100%;" ></textarea>
-              </p>
-            </div>
-            <div class="modal-footer justify-content-between">
-              <div>
-                <button type="button" class="btn btn-danger" onclick="UpdateScriptHTML()">Save changes</button>
               </div>
               <div>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
