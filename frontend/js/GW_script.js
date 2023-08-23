@@ -4,7 +4,7 @@ Fungsi Class : untuk melakukan komunikasi data denganbackend server
 */
 ajax = function() {
     /* Sesuaikan URL API dengan alamat backend */
-    this.url_api = 'https://adminwb.gadawangi.com/index.php/api/';
+    this.url_api = 'http://localhost/backend/index.php/api/';
 
     /* Sesuaikan API KEy dengan API Key yang terdaftar di backend */
     this.api_key = 'adc31a54cbc7896b3f093c1d9cf29080';
