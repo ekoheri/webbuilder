@@ -81,6 +81,7 @@ class api_model {
         return json_encode($data);
     }
 
+    //Penambahan fasiltas assets
     function SearchImageTag($html) {
         //$pattern = '/img\s+class="GW_Editable"\s+src="assets\/([^"]+\.\w{2,4})"/'; 
         $pattern = '/assets\/([^"\' ]+\.\w{2,4})["\']/';
