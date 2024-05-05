@@ -42,7 +42,7 @@ class api_model {
                 //replace HTML
                 $file_name = $json_arr[$element_name][$i]['html'];
                 $f = DIR_ELEMENT_HTML.'/'.$file_name;
-                $json_arr[$element_name][$i]['html'] = htmlentities(file_get_contents($f));
+                $json_arr[$element_name][$i]['html'] = htmlentities($this->SearchImageTag(file_get_contents($f)));
             }
         }
 
@@ -79,6 +79,23 @@ class api_model {
         
         //return to controller
         return json_encode($data);
+    }
+
+    function SearchImageTag($html) {
+        //$pattern = '/img\s+class="GW_Editable"\s+src="assets\/([^"]+\.\w{2,4})"/'; 
+        $pattern = '/assets\/([^"\' ]+\.\w{2,4})["\']/';
+        preg_match_all($pattern, $html, $matches);
+        for ($i = 0; $i < count($matches[0]); $i++) {
+            $html = str_replace($matches[0][$i], $this->ConvertImageToBase64($matches[1][$i]), $html);
+        }
+
+        return $html;
+    }
+
+    function ConvertImageToBase64($filename) {
+        $image = file_get_contents(DIR_ASSETS.'/'.$filename);
+        $data = base64_encode($image);
+        return 'data:image/png;base64,'.$data.'" '; 
     }
 }//end class
 ?>

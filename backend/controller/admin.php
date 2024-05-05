@@ -18,7 +18,6 @@ class admin extends singleton {
         $data_content = array();
         $data_elements = $this->admin_model->get_all_elements();
         foreach($data_elements as $key => $value) {
-
             $data_list = array(
                 'element_type' => $key,
                 'element_data' => (array)$value
@@ -26,6 +25,9 @@ class admin extends singleton {
             $data_content[$key] = $this->view_library->load('view_list_elements', $data_list);
             $data_content['active'] = $active;
         }
+        $data_assets = array();
+        $data_assets['data_assets'] = array_diff(scandir(DIR_ASSETS), array('..', '.'));
+        $data_content['list_asset'] = $this->view_library->load('view_list_assets', $data_assets);
         echo $this->view_library->load('view_header');
         echo $this->view_library->load('view_list', $data_content);
         echo $this->view_library->load('view_footer');
@@ -40,7 +42,7 @@ class admin extends singleton {
         $id_element = isset($_POST['id_element']) ? $_POST['id_element'] : '';
         $img_base64 = isset($_POST['img_base64']) ? $_POST['img_base64'] : '';
         $script_html = isset($_POST['script_html']) ? $_POST['script_html'] : '';
-        
+
         $data = array (
             'element_name' => $element_name,
             'id_element' => $id_element,
@@ -53,6 +55,25 @@ class admin extends singleton {
         }
     }
 
+    function save_asset() {
+        $asset = array();
+        if(count($_FILES['img_asset']) > 0) {
+            $data = array(
+                'img_asset' => $_FILES['img_asset']
+            );
+            
+            /*
+            echo "<pre>";
+            print_r($data);
+            echo "</pre>";
+            */
+            $status = $this->admin_model->save_assets($data);
+            if($status == true) {
+                header("location: ".BASE_URL."/index.php/admin/index/navbar");
+            }
+        }
+    }
+
     function delete($type, $id) {
         if(!isset($_SESSION['informasi_user'])) {
             header("location: ".BASE_URL."/index.php/admin/login");
@@ -60,9 +81,19 @@ class admin extends singleton {
         }
 
         $status = $this->admin_model->delete_element($type, $id);
-        if(status == true) {
+        if($status == true) {
             header("location: ".BASE_URL."/index.php/admin/index/".$type);
         }
+    }
+
+    function delete_asset($id) {
+        if(!isset($_SESSION['informasi_user'])) {
+            header("location: ".BASE_URL."/index.php/admin/login");
+            exit;
+        }
+
+        unlink(DIR_ASSETS."/".$id);
+        header("location: ".BASE_URL."/index.php/admin/index/navbar");
     }
 
     function showapikey() {

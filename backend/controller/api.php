@@ -15,7 +15,7 @@ class api extends singleton {
 
     function elements($parameter, $page=1)
     {
-        $api_key =  $this->api_model->get_api_key();
+        /*$api_key =  $this->api_model->get_api_key();
         $header = getallheaders();
 
         if(!isset($header['api-key'])) {
@@ -26,7 +26,7 @@ class api extends singleton {
             http_response_code(401);
             echo "<h1>401 : Access denied, because API key is unknown</h1>";
             exit;
-        }
+        }*/
         
         echo $this->api_model->get_single_element($parameter, $page);
     }

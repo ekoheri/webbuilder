@@ -1,22 +1,20 @@
-/* 
-Nama Class   : ajax 
-Fungsi Class : untuk melakukan komunikasi data denganbackend server 
-*/
-ajax = function() {
-    /* Sesuaikan URL API dengan alamat backend */
-    this.url_api = 'http://localhost:8080/index.php/api/';
+class Ajax {
+    constructor() {
+        /* Sesuaikan URL API dengan alamat backend */
+        this.url_api = 'http://localhost:8080/index.php/api/';
 
-    /* Sesuaikan API KEy dengan API Key yang terdaftar di backend */
-    this.api_key = 'e41d1f4ac632e4adf91ebf087a487ba4';
-    
-    this.ContainerLoading = null;
+        /* Sesuaikan API KEy dengan API Key yang terdaftar di backend */
+        this.api_key = 'e41d1f4ac632e4adf91ebf087a487ba4';
 
-    this.sendRequest = function (method, url_target, data) {
+        this.ContainerLoading = null;
+    }
+
+    sendRequest(method, url_target, data) {
         var url = this.url_api + url_target;
         var api_key = this.api_key;
         const ContainerLoading = this.ContainerLoading;
         const ShowLoading = this.ShowLoading();
-        return new Promise(function(resolve, reject){
+        return new Promise(function(resolve, reject) {
             /* new instance dari object XMLHttpRequest */
             var http = new XMLHttpRequest();
 
@@ -35,12 +33,12 @@ ajax = function() {
 
             /* Event ketika berhasil mendapatlan data dari backend */
             http.onload = function() {
-                if(http.readyState == 4 && http.status == 200){
+                if (http.readyState == 4 && http.status == 200) {
                     var response = http.responseText;
                     resolve(response);
                 }
             }
-            
+
             /* Event ketika gagal melakukan koneksi ke backend */
             http.onerror = reject;
 
@@ -50,7 +48,7 @@ ajax = function() {
     }
 
     /* Method untuk menampilkan gambar loading ketika request dari backend blm selesai */
-    this.ShowLoading = function () {
+    ShowLoading() {
         var divElement = document.createElement("div");
         divElement.style.textAlign = "center";
         divElement.style.padding = "30px";
@@ -63,74 +61,71 @@ ajax = function() {
 
         return divElement;
     }
-}//end ajax
+}
 
-/* 
-Nama Class   : HandleUI 
-Fungsi Class : untuk menghandle event dan method pada tampilan (UI)
-*/
+class HandleUI {
+    constructor() {
+        //Properti untuk meng-instansiasi class AJAX
+        this.Service = null;
 
-HandleUI = function () {
-    //Properti untuk meng-instansiasi class AJAX
-    this.Service = null;
+        //property untuk bagian header
+        this.ListRequestElement = '';
+        this.btnDownload = document.getElementById('btnDownload');
 
-    //property untuk bagian header
-    this.ListRequestElement = '';
-    this.btnDownload = document.getElementById('btnDownload');
+        //property untuk bagian SidebarItem
+        this.ElementSelected = '';
+        this.current_page = 1;
+        this.total_pages = 0;
 
-    //property untuk bagian SidebarItem
-    this.ElementSelected = '';
-    this.current_page = 1;
-    this.total_pages = 0;
+        this.btnSidebarItemNavbar = document.getElementById('btnSidebarItemNavbar');
+        this.btnSidebarItemHeader = document.getElementById('btnSidebarItemHeader');
+        this.btnSidebarItemContent = document.getElementById('btnSidebarItemContent');
+        this.btnSidebarItemFooter = document.getElementById('btnSidebarItemFooter');
+        this.btnSidebarItemPage = document.getElementById('btnSidebarItemPage');
 
-    this.btnSidebarItemNavbar = document.getElementById('btnSidebarItemNavbar');
-    this.btnSidebarItemHeader = document.getElementById('btnSidebarItemHeader');
-    this.btnSidebarItemContent = document.getElementById('btnSidebarItemContent');
-    this.btnSidebarItemFooter = document.getElementById('btnSidebarItemFooter');
-    this.btnSidebarItemPage = document.getElementById('btnSidebarItemPage');
+        //property untuk bagian ProductMenu
+        this.divProductMenu = document.getElementById('divProductMenu');
+        this.btnCloseProductMenu = document.getElementById('btnCloseProductMenu');
+        this.divElementSelected = document.getElementById('divElementSelected');
+        this.btnPgntPrev = document.getElementById('btnPgntPrev');
+        this.btnPgntNext = document.getElementById('btnPgntNext');
+        this.divDisplayProductItem = document.getElementById('divDisplayProductItem');
 
-    //property untuk bagian ProductMenu
-    this.divProductMenu = document.getElementById('divProductMenu');
-    this.btnCloseProductMenu = document.getElementById('btnCloseProductMenu');
-    this.divElementSelected = document.getElementById('divElementSelected');
-    this.btnPgntPrev = document.getElementById('btnPgntPrev');
-    this.btnPgntNext = document.getElementById('btnPgntNext');
-    this.divDisplayProductItem = document.getElementById('divDisplayProductItem');
+        //property untuk bagian Content Canvas
+        this.divContentCanvas = document.getElementById('divContentCanvas');
 
-    //property untuk bagian Content Canvas
-    this.divContentCanvas = document.getElementById('divContentCanvas');
+        //constanta generator Id element On the Fly
+        this.IdProductItem = "IdProductItem-";
+        this.IdElementContainer = "IdElementContainer-";
+        this.IdFillElement = "IdFillElement-";
 
-    //constanta generator Id element On the Fly
-    this.IdProductItem = "IdProductItem-";
-    this.IdElementContainer = "IdElementContainer-";
-    this.IdFillElement = "IdFillElement-";
+        //property untuk bagian  Modal Update Element
+        this.IdElementSelected = '';
+        this.IdImageSelected = '';
 
-    //property untuk bagian  Modal Update Element
-    this.IdElementSelected = '';
-    this.IdImageSelected = '';
+        this.ModalUpdateElement = document.getElementById('ModalUpdateElement');
+        this.divUpdateCodeHTML = document.getElementById('divUpdateCodeHTML');
+        this.divUpdateImage = document.getElementById('divUpdateImage');
 
-    this.ModalUpdateElement = document.getElementById('ModalUpdateElement');
-    this.divUpdateCodeHTML = document.getElementById('divUpdateCodeHTML');
-    this.divUpdateImage = document.getElementById('divUpdateImage');
+        this.txtCodeHTML = document.getElementById('txtCodeHTML');
+        this.inpFileImage = document.getElementById('inpFileImage');
+        this.imgNewPicture = document.getElementById('imgNewPicture');
+        this.inpImageWidth = document.getElementById('inpImageWidth');
+        this.inpImageHeight = document.getElementById('inpImageHeight');
 
-    this.txtCodeHTML = document.getElementById('txtCodeHTML');
-    this.inpFileImage = document.getElementById('inpFileImage');
-    this.imgNewPicture = document.getElementById('imgNewPicture');
-    this.inpImageWidth = document.getElementById('inpImageWidth');
-    this.inpImageHeight = document.getElementById('inpImageHeight');
-
-    this.btnCopyToCliboard = document.getElementById('btnCopyToCliboard');
-    this.btnUpdateElement = document.getElementById('btnUpdateElement');
+        this.btnCopyToCliboard = document.getElementById('btnCopyToCliboard');
+        this.btnUpdateElement = document.getElementById('btnUpdateElement');
+    }
 
     // Method init
-    this.init = function() {
+    init() {
         this.ShowToastTooltip();
 
         /* tampilkan element konten kosong */
         this.divContentCanvas.appendChild(this.ShowBlankContent());
 
         /* Instansiasi class ajax */
-        this.Service = new ajax();
+        this.Service = new Ajax();
         this.Service.ContainerLoading = this.divDisplayProductItem;
 
         /* Mendefinisikan seluruh event yang dibutuhkan UI */
@@ -179,7 +174,7 @@ HandleUI = function () {
         }.bind(this));
     } //end method init
 
-    this.ShowToastTooltip = function() {
+    ShowToastTooltip() {
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
       
@@ -189,7 +184,7 @@ HandleUI = function () {
     }
 
     // Menmapilkan menu Product Element (navbar, header, content etc)
-    this.ShowProductMenu = function(TypeProduct) {
+    ShowProductMenu(TypeProduct) {
         this.ElementSelected = TypeProduct;
         if((this.divProductMenu.style.display =="") || (this.divProductMenu.style.display =="none"))
             this.divProductMenu.style.display = "block";
@@ -209,7 +204,7 @@ HandleUI = function () {
     }
 
     // Menangani pagination prev
-    this.ShowProductPrev = function() {
+    ShowProductPrev() {
         if(this.current_page > 1) {
             this.current_page--;
             this.ShowProductMenu(this.ElementSelected);
@@ -217,7 +212,7 @@ HandleUI = function () {
     }
 
     // Menangani pagination next
-    this.ShowProductNext = function() {
+    ShowProductNext() {
         if(this.current_page < this.total_pages) {
             this.current_page++;
             this.ShowProductMenu(this.ElementSelected);
@@ -225,12 +220,12 @@ HandleUI = function () {
     }
 
     // Menyembunyikan tampilan menu product
-    this.HideProductMenu = function() {
+    HideProductMenu() {
         this.divProductMenu.style.display = "none";
     }
 
     // Menampilkan blank contemt yaitu ketika user belum memilih salah satu element
-    this.ShowBlankContent = function() {
+    ShowBlankContent() {
         var divContainer = document.createElement("div");
         divContainer.className = "GW_content_blank";
 
@@ -259,7 +254,7 @@ HandleUI = function () {
     }
 
     //Menterjemahkan data element dari string ke array JSON
-    this.parsingDataElement = function (response) {
+    parsingDataElement(response) {
         /* Mengkonversi String ke array JSON */
         var dataJson = JSON.parse(response);
         
@@ -289,7 +284,7 @@ HandleUI = function () {
     }
 
     // Method untuk menampilkan element pada menu product
-    this.DrawElements = function (dataElement) {
+    DrawElements(dataElement) {
         /* Mengosongkan daftar Product Element */
         this.divDisplayProductItem.innerHTML = "";
 
@@ -343,7 +338,7 @@ HandleUI = function () {
         }
     }
 
-    this.AddElement = function (idItem) {
+    AddElement(idItem) {
         /*Membuat element DIV untuk menampung element HTML */
         var divElementContainer = document.createElement("div");
         divElementContainer.id = this.IdElementContainer+idItem;
@@ -418,7 +413,7 @@ HandleUI = function () {
     }
 
     /* Method untuk menghapus element yang tidak digunakan oleh user */
-    this.RemoveElement = function(idItem) {
+    RemoveElement(idItem) {
         /* Menghapus Element di divContentCanvas */
         document.getElementById(this.IdElementContainer+idItem).remove();
 
@@ -444,7 +439,7 @@ HandleUI = function () {
     }
 
     /* Method untuk mendownload element HTML menjadi file index.html */
-    this.DownloadPage = function() {
+    DownloadPage() {
         // Jika divContentCanvas kosong, maka tidak ada yg bisa di-download
         if(this.ListRequestElement == '') {
             alert("Tidak ada element HTML yang dipilih!");
@@ -507,7 +502,7 @@ HandleUI = function () {
     }
 
     /* Method untuk menampilkan Kode Script HTML element yg dipilih user */
-    this.ShowModal = function(idItem, HtmlType) {
+    ShowModal(idItem, HtmlType) {
         let modal = bootstrap.Modal.getOrCreateInstance(this.ModalUpdateElement);
         // Jika yang ditampilkan adalah script element utuh, maka yg diijinkan hanya meng-copy saja
         if(HtmlType == 'element-copy') {
@@ -542,7 +537,7 @@ HandleUI = function () {
     }
 
     /* Method untuk meng-copy ke clipboard */
-    this.CopyToCliboard = function() {
+    CopyToCliboard() {
         let modal = bootstrap.Modal.getOrCreateInstance(this.ModalUpdateElement);
         try {
             navigator.clipboard.writeText(this.txtCodeHTML.value);
@@ -558,7 +553,7 @@ HandleUI = function () {
     Method untuk mendeteksi element mana saja yang boleh di-edit oleh user 
     Cirinya, jika di element class-nya mengandung kata "GW_Editable"
     */
-    this.DetectEditableObject = function() {
+    DetectEditableObject() {
         //Cari diseluruh element yg class-nya mengandung GW_Editable
         var obj = this.divContentCanvas.getElementsByClassName('GW_Editable');
 
@@ -588,7 +583,7 @@ HandleUI = function () {
     }
     
     /* Method untuk merubah gambar */
-    this.ChangeImage = function(tagId) {
+    ChangeImage(tagId) {
         // Membuat canvas untuk menggambar kalimat "Upload Gambar bro!"
         var canvas = document.createElement("canvas");
         canvas.width = 300;
@@ -615,7 +610,7 @@ HandleUI = function () {
     }
 
     /* Method untuk Meng-update script HTML atau gambar jika element-nya di-edit oleh user */
-    this.UpdateElement = function() {
+    UpdateElement() {
         let modal = bootstrap.Modal.getOrCreateInstance(this.ModalUpdateElement);
         if(this.IdImageSelected != '') {
             var oldImg = document.getElementById(this.ImageSelected);
@@ -632,16 +627,15 @@ HandleUI = function () {
     }
 
     /* Method untuk meng-konversi dari String ke HTML */
-    this.StringToHTML = function(str) {
+    StringToHTML = function(str) {
         /* Convert String ke HTML. Merubah &lt; ke < &gt; ke > dst */
         let txt = new DOMParser().parseFromString(str, "text/html");
         return txt.documentElement.textContent;
     }
+}
 
-} //End GWBuilderJs
-
-// Fungsi Bootstrap untuk mulai menjalakan class HandleUI
+//Inisialisasi class HandleUI
 window.addEventListener('load', () => {
-    var hUI = new HandleUI();
-    hUI.init();
+    const handleUI = new HandleUI();
+    handleUI.init();
 });

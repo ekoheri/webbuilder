@@ -38,44 +38,80 @@
                 </div> <!-- tab-content -->
             </div> <!-- Col -->
         </div> <!-- Row -->
+        <p>&nbsp;</p>
+        <div class="row">
+            <div class="col">
+            <?php echo $list_asset; ?>
+            </div>
+        </div> <!-- Row -->   
     </div> <!-- Container -->
 </section>
 <section>
     <div id="idModalEntry" class="modal" tabindex="-1">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <form id="idFormEntry" method="POST" action="<?php echo BASE_URL?>/index.php/admin/save_element">
-                <div class="modal-header">
-                    <h5 class="modal-title">Entry Element</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input hidden name="element_name" id ="IdNameElement" type="text" />
-                    <div class="mb-3">
-                        <label for="InputIDElement" class="form-label">ID Element</label>
-                        <input readonly name="id_element" id ="IdElement" type="text" class="form-control" id="InputIDElement" aria-describedby="idElementHelp" />
-                        <div id="idElementHelp" class="form-text">ID Element sudah terisi otomatis. Namun anda boleh menggantinya</div>
+                <form id="idFormEntry" method="POST" action="<?php echo BASE_URL?>/index.php/admin/save_element">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Entry Element</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="mb-3">
-                        <label for="formFile" class="form-label">Gambar Element</label>
-                        <input name="img_element" class="form-control" type="file" id="formFile" aria-describedby="imgFileHelp" onchange="encodeImageFile(this)">
-                        <div id ="imgFileHelp" class="form-text">Gambar element harus diisi.</div>
-                        <textarea hidden name="img_base64" id="idNewImage"></textarea>
+                    <div class="modal-body">
+                        <input hidden name="element_name" id ="IdNameElement" type="text" />
+                        <div class="mb-3">
+                            <label for="InputIDElement" class="form-label">ID Element</label>
+                            <input readonly name="id_element" id ="IdElement" type="text" class="form-control" id="InputIDElement" aria-describedby="idElementHelp" />
+                            <div id="idElementHelp" class="form-text">ID Element sudah terisi otomatis.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">Gambar Element</label>
+                            <input name="img_element" class="form-control" type="file" id="formFile" aria-describedby="imgFileHelp" onchange="encodeImageFile(this)">
+                            <div id ="imgFileHelp" class="form-text">Gambar element harus diisi.</div>
+                            <textarea hidden name="img_base64" id="idNewImage"></textarea>
+                        </div>
+                        <div class="mb-3 form-floating">
+                            <textarea name="script_html" id="idScriptHtml" class="form-control" placeholder="Isi script HTML disini" id="floatingTextareaHTML" style="height:100px;"></textarea>
+                            <label for="floatingTextareaHTML">Tambahkan script HTML disini</label>
+                        </div>
+                    </div> <!-- modal body -->
+                    <div class="modal-footer justify-content-between">
+                        <div>
+                            <button type="button" class="btn btn-primary" onclick="SubmitElement()">Save</button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div> <!-- modal footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div id="idModalAsset" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="idFormAsset" method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL?>/index.php/admin/save_asset">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Entry Asset</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="mb-3 form-floating">
-                        <textarea name="script_html" id="idScriptHtml" class="form-control" placeholder="Isi script HTML disini" id="floatingTextareaHTML" style="height:160px;"></textarea>
-                        <label for="floatingTextareaHTML">Tambahkan script HTML disini</label>
-                    </div>
-                </div> <!-- modal body -->
-                <div class="modal-footer justify-content-between">
-                    <div>
-                        <button type="button" class="btn btn-primary" onclick="SubmitElement()">Save</button>
-                    </div>
-                    <div>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div> <!-- modal footer -->
-            </form>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="formFileAsset" class="form-label">Gambar Asset</label>
+                            <input name="img_asset[]" class="form-control" type="file" multiple="multiple" accept=”image/*” id="formFileAsset" aria-describedby="imgFileHelpAsset" >
+                            <div id ="imgFileHelpAsset" class="form-text">Gambar asset ini bisa diisi jika memang ada asset yang akan disertakan. Contohnya asset gambar</div>
+                        </div>
+                    </div> <!-- Modal Body -->
+                    <div class="modal-footer justify-content-between">
+                        <div>
+                            <button type="button" class="btn btn-primary" onclick="SubmitAsset()">Save</button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div> <!-- modal footer -->
+                </form>
+            </div>
         </div>
     </div>
 </section>
@@ -90,10 +126,19 @@
         document.getElementById('idScriptHtml').value = "";
         modal.show();
     }
+    function ShowModalAsset() {
+        let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalAsset'));
+        modal.show();
+    }
     function SubmitElement(){
         let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalEntry'));
         modal.hide();
         document.getElementById('idFormEntry').submit();
+    }
+    function SubmitAsset(){
+        let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('idModalAsset'));
+        modal.hide();
+        document.getElementById('idFormAsset').submit();
     }
     /* Convert Image to Base64*/
     function encodeImageFile(element) {

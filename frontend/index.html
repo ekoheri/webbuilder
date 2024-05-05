@@ -100,7 +100,10 @@
             <div class="modal-body">
               <div id="divUpdateCodeHTML" hidden>
                 <p>
-                  <textarea id = "txtCodeHTML" class="form-control" style=" min-width:400px; max-width:100%;min-height:400px;height:100%;width:100%;" ></textarea>
+                  <button id="btnEditor" class="btn btn-primary" onclick="editor(this)" type="button">Enable Editor</button>
+                </p>
+                <p>
+                  <textarea id = "txtCodeHTML" class="form-control" style=" min-width:400px; max-width:100%;min-height:300px;height:90%;width:100%;" ></textarea>
                 </p>
               </div>
               <div id="divUpdateImage" hidden>
@@ -141,6 +144,28 @@
     </section>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/GW_script.js"></script>
+    <script src="js/GW_script_2.js"></script>
+    <script src="js/jquery-3.4.1.slim.min.js"></script>
+    <link href="css/summernote-lite.min.css" rel="stylesheet">
+    <script src="js/summernote-lite.min.js"></script>
+    <script lang="javascript">
+      var editor = function(btn) {
+        if(btn.innerHTML == "Enable Editor") {
+          btn.innerHTML = "Disable Editor";
+          $('#txtCodeHTML').summernote({
+            focus: true,
+            toolbar: [
+              ['style', ['style']],
+              ['font', ['bold', 'underline', 'clear']],
+              ['color', ['color']],
+              ['para', ['ul', 'ol', 'paragraph']],
+            ]
+          });
+        } else if(btn.innerHTML == "Disable Editor") {
+          btn.innerHTML = "Enable Editor";
+          $('#txtCodeHTML').summernote('destroy');
+        }
+      };
+    </script>
   </body>
 </html>

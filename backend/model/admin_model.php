@@ -16,12 +16,16 @@ class admin_model {
         if(!is_dir(DIR_ROOT .'/database/elements/images')) {
             mkdir(DIR_ROOT .'/database/elements/images');
         }
+
+        if(!is_dir(DIR_ROOT .'/database/elements/assets')) {
+            mkdir(DIR_ROOT .'/database/elements/assets');
+        }
             
         if(!file_exists(DB_USER)) {
             $user = array (
                 array(
-                    "username" => "admin@gadawangi.com",
-                    "passwd" => MD5("admin123")
+                    "username" => "admin@simetri.io",
+                    "passwd" => MD5("bismillah9")
                 )
             );
 
@@ -45,7 +49,7 @@ class admin_model {
         }        
             
         if(!file_exists(DB_API_KEY)) {
-            $key = "gadawangi-api-key-".time();
+            $key = "simetri-api-key-".time();
             $db_api_key = array(
                 "api_key" => MD5($key)
             );
@@ -199,6 +203,27 @@ class admin_model {
         }
         return $status;
     }//end save_element
+
+    public function save_assets($data) {
+        $status = false;
+        $jumlahFile = count($data['img_asset']['name']);
+        if($jumlahFile > 0) {
+            for ($i = 0; $i < $jumlahFile; $i++) {
+                $namaFile = $data['img_asset']['name'][$i];
+                $lokasiTmp = $data['img_asset']['tmp_name'][$i];
+                $lokasiBaru = DIR_ASSETS."/".$namaFile;
+                $prosesUpload = move_uploaded_file($lokasiTmp, $lokasiBaru);
+                if ($prosesUpload) {
+                    $status = true;
+                } else {
+                    $status = false;
+                }
+            }
+        } else {
+            $status = false;
+        }
+        return $status;
+    }
 
     public function delete_element($type, $id) {
         $status = false;
