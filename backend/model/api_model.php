@@ -83,11 +83,11 @@ class api_model {
 
     //Penambahan fasiltas assets
     function SearchImageTag($html) {
-        //$pattern = '/img\s+class="GW_Editable"\s+src="assets\/([^"]+\.\w{2,4})"/'; 
         $pattern = '/assets\/([^"\' ]+\.\w{2,4})["\']/';
+
         preg_match_all($pattern, $html, $matches);
         for ($i = 0; $i < count($matches[0]); $i++) {
-            $html = str_replace($matches[0][$i], $this->ConvertImageToBase64($matches[1][$i]), $html);
+            $html = str_replace('assets/'.$matches[1][$i], $this->ConvertImageToBase64($matches[1][$i]), $html);
         }
 
         return $html;
@@ -96,7 +96,7 @@ class api_model {
     function ConvertImageToBase64($filename) {
         $image = file_get_contents(DIR_ASSETS.'/'.$filename);
         $data = base64_encode($image);
-        return 'data:image/png;base64,'.$data.'" '; 
+        return 'data:image/png;base64,'.$data; 
     }
 }//end class
 ?>
