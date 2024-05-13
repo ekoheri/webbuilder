@@ -158,11 +158,11 @@ class admin_model {
         $status = false;
         if($data['img_base64'] != '')
         {
-            $img_file = fopen(DIR_ELEMENT_IMAGES.'/'.$data['id_element'].".txt", "w") or die("Unable to open file".$data['id_element'].".txt");
+            $img_file = fopen(DIR_ELEMENT_IMAGES.'/'.$data['id_element'].".txt", "w") or die("Unable to open file ".$data['id_element'].".txt");
             fwrite($img_file, $data['img_base64']);
             fclose($img_file);
 
-            $html_file = fopen(DIR_ELEMENT_HTML.'/'.$data['id_element'].".html", "w") or die("Unable to open file".$data['id_element'].".html");
+            $html_file = fopen(DIR_ELEMENT_HTML.'/'.$data['id_element'].".html", "w") or die("Unable to open file ".$data['id_element'].".html");
             fwrite($html_file, $data['script_html']);
             fclose($html_file);
 
@@ -216,10 +216,12 @@ class admin_model {
                 if ($prosesUpload) {
                     $status = true;
                 } else {
+                    echo "Gagal upload! ke ".$lokasiBaru;
                     $status = false;
                 }
             }
         } else {
+            echo "Jumlah file kosong!";
             $status = false;
         }
         return $status;

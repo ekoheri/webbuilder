@@ -1,7 +1,7 @@
 class Ajax {
     constructor() {
         /* Sesuaikan URL API dengan alamat backend */
-        this.url_api = 'http://localhost:8080/index.php/api/';
+        this.url_api = 'https://backend.simetri.io/index.php/api/';
 
         /* Sesuaikan API KEy dengan API Key yang terdaftar di backend */
         this.api_key = 'e41d1f4ac632e4adf91ebf087a487ba4';
@@ -93,6 +93,7 @@ class HandleUI {
 
         //property untuk bagian Content Canvas
         this.divContentCanvas = document.getElementById('divContentCanvas');
+        this.btnDownload.disabled = true;
 
         //constanta generator Id element On the Fly
         this.IdProductItem = "IdProductItem-";
@@ -115,11 +116,14 @@ class HandleUI {
 
         this.btnCopyToCliboard = document.getElementById('btnCopyToCliboard');
         this.btnUpdateElement = document.getElementById('btnUpdateElement');
+        this.btnCloseModal = document.getElementById('btnCloseModal');
+        this.btnSummernoteEditor = document.getElementById('btnSummernoteEditor');
+        this.btnSummernoteEditor.innerHTML = 'Enable Editor';
     }
 
     // Method init
     init() {
-        this.ShowToastTooltip();
+        //this.ShowTooltip();
 
         /* tampilkan element konten kosong */
         this.divContentCanvas.appendChild(this.ShowBlankContent());
@@ -172,15 +176,26 @@ class HandleUI {
         this.btnUpdateElement.addEventListener('click', function() {
             this.UpdateElement();
         }.bind(this));
+
+        this.btnSummernoteEditor.addEventListener('click', function(){
+            if(this.btnSummernoteEditor.innerHTML == 'Enable Editor')
+                this.EnableSummernote();
+            else if(this.btnSummernoteEditor.innerHTML == 'Disable Editor')
+                this.DisableSummernote();
+        }.bind(this));
+
+        this.btnCloseModal.addEventListener('click', function() {
+            this.HideModal();
+        }.bind(this));
     } //end method init
 
-    ShowToastTooltip() {
+    ShowTooltip() {
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
       
-        const toastLiveExample = document.getElementById('liveToast');
-        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
-        toastBootstrap.show();
+        //const toastLiveExample = document.getElementById('liveToast');
+        //const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+        //toastBootstrap.show();
     }
 
     // Menmapilkan menu Product Element (navbar, header, content etc)
@@ -402,6 +417,8 @@ class HandleUI {
             obj_json.push({element : idItem, user : ''});
             this.ListRequestElement = JSON.stringify(obj_json);
         }
+
+        this.btnDownload.disabled = false;
         /* Menambahkan divFillContent dan divAction menjadi anaknya divContentCanvas */
         this.divContentCanvas.appendChild(divElementContainer);
 
@@ -434,6 +451,7 @@ class HandleUI {
             listReqElement = '';
             /* Jika konten kosong, maka tampilkan element blank */
             this.divContentCanvas.appendChild(this.ShowBlankContent());
+            this.btnDownload.disabled = true;
         }
         this.ListRequestElement = listReqElement;
     }
@@ -536,6 +554,12 @@ class HandleUI {
         modal.show();
     }
 
+    HideModal() {
+        let modal = bootstrap.Modal.getOrCreateInstance(this.ModalUpdateElement);
+        this.DisableSummernote();
+        modal.hide();
+    }
+
     /* Method untuk meng-copy ke clipboard */
     CopyToCliboard() {
         let modal = bootstrap.Modal.getOrCreateInstance(this.ModalUpdateElement);
@@ -570,31 +594,41 @@ class HandleUI {
             Jika tagName-nya adalah image, maka tambahkan event click untuk Ganti Gambar (ChangeImage)
             Selain IMG, maka tambahkan event click untuk tampilkan kode HTML (ShowModalCode)
             */
+            obj[i].setAttribute('data-bs-toggle', 'tooltip');
+            obj[i].setAttribute('data-bs-placement', 'top');
             if(tagObj == 'img') {
+                obj[i].setAttribute('data-bs-title', 'Double click disini untuk mengganti gambar ini');
                 obj[i].addEventListener('click', function() {
-                    this.ShowModal(tagId, 'img-edit')
+                    this.ShowModal(tagId, 'img-edit');
                 }.bind(this));
             } else {
+                obj[i].setAttribute('data-bs-title', 'Double click disini untuk mengganti isi element ini');
                 obj[i].addEventListener('click', function() {
                     this.ShowModal(tagId, 'tag-edit');
                 }.bind(this));
             }
         }
+        this.ShowTooltip();
     }
     
     /* Method untuk merubah gambar */
     ChangeImage(tagId) {
-        // Membuat canvas untuk menggambar kalimat "Upload Gambar bro!"
-        var canvas = document.createElement("canvas");
-        canvas.width = 300;
-        canvas.height = 300;
-        var ctx = canvas.getContext('2d');
-        ctx.font = "20px Arial";
-        var text = "Upload gambarnya bro!";
-        ctx.fillText(text,10,150);
-        
         this.ImageSelected = tagId;
-        this.imgNewPicture.src = canvas.toDataURL();
+        var oldImage = document.getElementById(tagId);
+        
+        this.imgNewPicture.src = oldImage.src;
+        if(oldImage.style.width != '')
+            this.inpImageWidth.value = oldImage.style.width;
+        else 
+            this.inpImageWidth.value = oldImage.width;
+        this.inpImageWidth.value = this.inpImageWidth.value.replace("px","");
+        
+        if(oldImage.style.height != '')
+            this.inpImageHeight.value = oldImage.style.height;
+        else
+            this.inpImageHeight.value = oldImage.height;
+        this.inpImageHeight.value = this.inpImageHeight.value.replace("px", "");
+
         this.imgNewPicture.style.width = "100%";
         this.imgNewPicture.style.height = "300px";
         this.inpFileImage.addEventListener('change', function() {
@@ -611,7 +645,6 @@ class HandleUI {
 
     /* Method untuk Meng-update script HTML atau gambar jika element-nya di-edit oleh user */
     UpdateElement() {
-        let modal = bootstrap.Modal.getOrCreateInstance(this.ModalUpdateElement);
         if(this.IdImageSelected != '') {
             var oldImg = document.getElementById(this.ImageSelected);
 
@@ -623,7 +656,25 @@ class HandleUI {
         else if(this.IdElementSelected != '') {
             document.getElementById(this.IdElementSelected).innerHTML = this.txtCodeHTML.value;            
         }
-        modal.hide();
+        this.HideModal();
+    }
+
+    EnableSummernote() {
+        $('#txtCodeHTML').summernote({
+            focus: true,
+            toolbar: [
+              ['style', ['style']],
+              ['font', ['bold', 'underline', 'clear']],
+              ['color', ['color']],
+              ['para', ['ul', 'ol', 'paragraph']],
+            ]
+        });
+        this.btnSummernoteEditor.innerHTML = 'Disable Editor';
+    }
+
+    DisableSummernote() {
+        $('#txtCodeHTML').summernote('destroy');
+        this.btnSummernoteEditor.innerHTML = 'Enable Editor';
     }
 
     /* Method untuk meng-konversi dari String ke HTML */

@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta name="description" content="Raih kemudahan dalam membangun website impian anda dengan Web Builder inovatif kami. Tanpa perlu pengetahuan teknis, Anda dapat membuat website yang menarik dengan cepat. Jelajahi fitur-fitur kreatif kami sekarang.">
     <meta name="keywords" content="web builder, web builder adalah, web builder gratis, web builder free, web builder ai, web build pc, web builder terbaik, web builder indonesia, web building">
-    <title>Web Builder - Gadawangi</title>
+    <title>Web Builder - Simetri</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/gwbuilder.css" rel="stylesheet">
   </head>
@@ -14,9 +14,9 @@
     <section>
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="https://gadawangi.com">
-            <img src="images/logo-gw.png" />
-            <span>Web Builder</span>
+          <a class="navbar-brand" href="https://simetri.io">
+            <img src="images/logo-simetri-icon.png" />
+            <span>Simetri - Web Builder</span>
           </a>
           <div class="d-flex" role="search">
             <button id="btnDownload" class="btn btn-danger">Download</button>
@@ -100,7 +100,7 @@
             <div class="modal-body">
               <div id="divUpdateCodeHTML" hidden>
                 <p>
-                  <button id="btnEditor" class="btn btn-primary" onclick="editor(this)" type="button">Enable Editor</button>
+                  <button type="button" id="btnSummernoteEditor" class="btn btn-primary">Enable Editor</button>
                 </p>
                 <p>
                   <textarea id = "txtCodeHTML" class="form-control" style=" min-width:400px; max-width:100%;min-height:300px;height:90%;width:100%;" ></textarea>
@@ -121,7 +121,7 @@
                 <button id ="btnCopyToCliboard" type="button" class="btn btn-primary">Copy</button>
               </div>
               <div>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="btnCloseModal" type="button" class="btn btn-secondary">Close</button>
               </div>
             </div>
           </div>
@@ -148,25 +148,5 @@
     <script src="js/jquery-3.4.1.slim.min.js"></script>
     <link href="css/summernote-lite.min.css" rel="stylesheet">
     <script src="js/summernote-lite.min.js"></script>
-    <!-- penambahan summernote -->
-    <script lang="javascript">
-      var editor = function(btn) {
-        if(btn.innerHTML == "Enable Editor") {
-          btn.innerHTML = "Disable Editor";
-          $('#txtCodeHTML').summernote({
-            focus: true,
-            toolbar: [
-              ['style', ['style']],
-              ['font', ['bold', 'underline', 'clear']],
-              ['color', ['color']],
-              ['para', ['ul', 'ol', 'paragraph']],
-            ]
-          });
-        } else if(btn.innerHTML == "Disable Editor") {
-          btn.innerHTML = "Enable Editor";
-          $('#txtCodeHTML').summernote('destroy');
-        }
-      };
-    </script>
   </body>
 </html>
